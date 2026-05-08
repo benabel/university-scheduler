@@ -1,0 +1,58 @@
+{
+  "constraints": [
+    "no_group_conflict",
+    "no_room_conflict",
+    "no_teacher_conflict"
+  ],
+  "entities": [
+    {
+      "label": "Lesson",
+      "name": "lesson",
+      "plural": "lessons"
+    }
+  ],
+  "facts": [
+    {
+      "label": "Timeslot",
+      "name": "timeslot",
+      "plural": "timeslots"
+    },
+    {
+      "label": "Teacher",
+      "name": "teacher",
+      "plural": "teachers"
+    },
+    {
+      "label": "Group",
+      "name": "group",
+      "plural": "groups"
+    },
+    {
+      "label": "Room",
+      "name": "room",
+      "plural": "rooms"
+    }
+  ],
+  "views": [
+    {
+      "allowsUnassigned": true,
+      "entity": "lesson",
+      "entityPlural": "lessons",
+      "id": "lesson-timeslot_idx",
+      "kind": "scalar",
+      "label": "Lesson · timeslot_idx",
+      "sourcePlural": "timeslots",
+      "variableField": "timeslot_idx"
+    },
+    {
+      "allowsUnassigned": true,
+      "entity": "lesson",
+      "entityPlural": "lessons",
+      "id": "lesson-room_idx",
+      "kind": "scalar",
+      "label": "Lesson · room_idx",
+      "sourcePlural": "rooms",
+      "variableField": "room_idx"
+    }
+  ]
+}

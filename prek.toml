@@ -1,0 +1,31 @@
+[[repos]]
+repo = "https://github.com/pre-commit/pre-commit-hooks"
+rev = "v6.0.0"
+hooks = [{ id = "trailing-whitespace" }]
+
+[[repos]]
+repo = "local"
+
+[[repos.hooks]]
+id = "rustfmt"
+name = "rustfmt"
+language = "system"
+pass_filenames =  false
+entry = "cargo fmt"
+files = "\\.rs$"
+
+[[repos.hooks]]
+id = "cargo-test"
+name = "cargo-test"
+language = "system"
+pass_filenames =  false
+entry = "cargo test"
+files = "\\.rs$"
+
+[[repos.hooks]]
+id = "soverforge-check"
+name = "solverforge-check"
+language = "system"
+pass_filenames =  false
+entry = "solverforge check"
+files = "\\.rs$"

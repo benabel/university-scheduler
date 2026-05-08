@@ -1,0 +1,38 @@
+{
+  "title": "university-scheduler",
+  "subtitle": "Constraint Optimizer",
+  "constraints": [
+    "no_teacher_conflict",
+    "no_group_conflict",
+    "no_room_conflict"
+  ],
+  "entities": [
+    {
+      "name": "lesson",
+      "label": "Lesson",
+      "plural": "lessons"
+    }
+  ],
+  "facts": [
+    {
+      "name": "timeslot",
+      "label": "Timeslot",
+      "plural": "timeslots"
+    },
+    {
+      "name": "teacher",
+      "label": "Teacher",
+      "plural": "teachers"
+    },
+    {
+      "name": "group",
+      "label": "Group",
+      "plural": "groups"
+    },
+    {
+      "name": "room",
+      "label": "Room",
+      "plural": "rooms"
+    }
+  ]
+}
