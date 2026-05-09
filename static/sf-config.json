@@ -2,6 +2,8 @@
   "title": "university-scheduler",
   "subtitle": "Constraint Optimizer",
   "constraints": [
+    "assign_timeslot",
+    "assign_room",
     "no_teacher_conflict",
     "no_group_conflict",
     "no_room_conflict"

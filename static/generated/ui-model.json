@@ -1,5 +1,7 @@
 {
   "constraints": [
+    "assign_timeslot",
+    "assign_room",
     "no_group_conflict",
     "no_room_conflict",
     "no_teacher_conflict"
@@ -35,7 +37,7 @@
   ],
   "views": [
     {
-      "allowsUnassigned": true,
+      "allowsUnassigned": false,
       "entity": "lesson",
       "entityPlural": "lessons",
       "id": "lesson-timeslot_idx",
@@ -45,7 +47,7 @@
       "variableField": "timeslot_idx"
     },
     {
-      "allowsUnassigned": true,
+      "allowsUnassigned": false,
       "entity": "lesson",
       "entityPlural": "lessons",
       "id": "lesson-room_idx",
