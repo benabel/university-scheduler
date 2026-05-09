@@ -14,18 +14,22 @@ This project was scaffolded by `solverforge-cli`, and currently targets `SolverF
 
 ## Model
 
-The app schedules 100 lessons for 4 student groups across 40 weekly timeslots
-and 10 rooms. Lessons are planning entities; timeslots, teachers, groups, and
-rooms are problem facts.
+The app schedules 300 lessons for 12 student cohorts across 40 weekly timeslots
+and 10 typed rooms. Lessons are planning entities; timeslots, teachers, groups,
+and rooms are problem facts.
 
 The score type is `HardMediumSoftScore`:
 
-- Hard constraints prevent teacher, group, and room overlaps.
+- Hard constraints prevent teacher, group, and room overlaps; enforce teacher
+  and group availability; and require enough room capacity.
 - Medium constraints require every lesson to receive a timeslot and a room.
-- Soft constraints are not currently used.
+- Soft constraints prefer matching room types, earlier-day lessons, and avoid
+  repeating the same subject twice on the same day for a cohort.
 
 The shipped demo data surface exposes a single deterministic dataset:
-`LARGE`.
+`LARGE`. It starts with every lesson unassigned, so the initial score is
+`0hard/-600medium/0soft`. Solving should reach hard/medium feasibility while
+retaining soft penalties that continue to show timetable-quality optimization.
 
 ## Quick Start
 
