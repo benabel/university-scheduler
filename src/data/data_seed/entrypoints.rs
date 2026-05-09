@@ -69,15 +69,30 @@ pub fn generate(demo: DemoData) -> Plan {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::constraints::create_constraints;
+    use solverforge::{ConstraintSet, HardMediumSoftScore};
 
     #[test]
     fn test_generate_large() {
         let plan = generate(DemoData::Large);
         assert_eq!(plan.timeslots.len(), 40);
-        assert_eq!(plan.teachers.len(), 12);
-        assert_eq!(plan.groups.len(), 4);
-        assert_eq!(plan.lessons.len(), 100);
+        assert_eq!(plan.teachers.len(), 20);
+        assert_eq!(plan.groups.len(), 12);
+        assert_eq!(plan.lessons.len(), 300);
         assert_eq!(plan.rooms.len(), 10);
+        assert!(plan
+            .lessons
+            .iter()
+            .all(|lesson| lesson.timeslot_idx.is_none()));
+        assert!(plan.lessons.iter().all(|lesson| lesson.room_idx.is_none()));
+    }
+
+    #[test]
+    fn test_generate_large_initial_score() {
+        let plan = generate(DemoData::Large);
+        let score = create_constraints().evaluate_all(&plan);
+
+        assert_eq!(score, HardMediumSoftScore::of_medium(-600));
     }
 
     #[test]

@@ -220,7 +220,7 @@ mod tests {
 
         let timeslots = vec![Timeslot::new(0, Weekday::Mon, NaiveTime::from_hms_opt(8, 0, 0).unwrap(), NaiveTime::from_hms_opt(10, 0, 0).unwrap())];
         let teachers = vec![Teacher::new(0, "Teacher A", [true; 10])];
-        let groups = vec![Group::new(0, "Group A", [true; 10])];
+        let groups = vec![Group::new(0, "Group A", 30, [true; 10])];
         let rooms = vec![Room::new(0, "Room A")];
         let lessons = vec![];
 

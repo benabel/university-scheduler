@@ -23,10 +23,10 @@ pub fn generate_large() -> Plan {
 ///
 /// This generates a substantial dataset suitable for benchmarking:
 /// - 40 timeslots (full week: Monday-Friday, 8:00-18:00, skipping lunch 12:00-14:00)
-/// - 12 teachers with classic UK school subjects
-/// - 4 groups
-/// - 100 lessons (25 per group based on subject hours allocation)
-/// - 10 rooms
+/// - 20 teachers with subject-specific availability
+/// - 12 groups
+/// - 300 lessons (25 per group based on subject hours allocation)
+/// - 10 typed rooms
 fn build_large_schedule() -> Plan {
     // Full week timeslots: 5 days * 8 slots per day = 40 timeslots
     let timeslots = build_timeslots(TIMESLOT_COUNT);
