@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use solverforge::prelude::*;
 
-/// TODO — describe this fact.
+/// A teacher with a weekly availability calendar.
 #[problem_fact]
 #[derive(Serialize, Deserialize)]
 pub struct Teacher {
@@ -10,16 +10,16 @@ pub struct Teacher {
     #[serde(skip)]
     pub index: usize, // the solver-facing join key
     pub name: String,
-    pub availability: [bool; 10],
+    pub availability: Vec<bool>,
 }
 
 impl Teacher {
-    pub fn new(index: usize, name: impl Into<String>, availability: [bool; 10]) -> Self {
+    pub fn new(index: usize, name: impl Into<String>, availability: impl Into<Vec<bool>>) -> Self {
         Self {
             id: format!("teacher-{index}"),
             index,
             name: name.into(),
-            availability,
+            availability: availability.into(),
         }
     }
 }
@@ -30,7 +30,7 @@ mod tests {
 
     #[test]
     fn test_teacher_construction() {
-        let fact = Teacher::new(0, "test", Default::default());
+        let fact = Teacher::new(0, "test", vec![true; 40]);
         assert_eq!(fact.index, 0);
         assert_eq!(fact.id, "teacher-0");
         assert_eq!(fact.name, "test");

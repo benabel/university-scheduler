@@ -31,7 +31,7 @@ This project depends on the published `solverforge` and `solverforge-ui` crates.
 - `cargo run --release --bin iut-solverforge` — run the app locally on
   `:7860`.
 - `cargo test` — run Rust unit and integration tests.
-- `cargo test large_demo_solves_to_feasible_terminal_state -- --ignored --nocapture`
+- `cargo test large_demo_solves_to_feasible_progressing_schedule -- --ignored --nocapture`
   — slow end-to-end solver acceptance test.
 - `find static/app -name '*.mjs' -print0 | xargs -0 -n1 node --check` —
   syntax-check frontend modules.

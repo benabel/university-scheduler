@@ -62,7 +62,7 @@ mod tests {
 
     #[test]
     fn detects_group_conflict_same_timeslot() {
-        let groups = vec![Group::new(0, "Group A", [true; 10])];
+        let groups = vec![Group::new(0, "Group A", 30, [true; 10])];
         let timeslots = vec![Timeslot::new(0, Weekday::Mon, time(8, 0), time(10, 0))];
         let teachers = vec![];
         let rooms = vec![];
@@ -86,7 +86,7 @@ mod tests {
 
     #[test]
     fn detects_group_conflict_overlapping_timeslots() {
-        let groups = vec![Group::new(0, "Group A", [true; 10])];
+        let groups = vec![Group::new(0, "Group A", 30, [true; 10])];
         let timeslots = vec![
             Timeslot::new(0, Weekday::Mon, time(8, 0), time(10, 0)),
             Timeslot::new(1, Weekday::Mon, time(9, 0), time(11, 0)),
@@ -113,8 +113,8 @@ mod tests {
     #[test]
     fn no_conflict_different_groups() {
         let groups = vec![
-            Group::new(0, "Group A", [true; 10]),
-            Group::new(1, "Group B", [true; 10]),
+            Group::new(0, "Group A", 30, [true; 10]),
+            Group::new(1, "Group B", 30, [true; 10]),
         ];
         let timeslots = vec![Timeslot::new(0, Weekday::Mon, time(8, 0), time(10, 0))];
         let teachers = vec![];
@@ -138,7 +138,7 @@ mod tests {
 
     #[test]
     fn no_conflict_non_overlapping_timeslots() {
-        let groups = vec![Group::new(0, "Group A", [true; 10])];
+        let groups = vec![Group::new(0, "Group A", 30, [true; 10])];
         let timeslots = vec![
             Timeslot::new(0, Weekday::Mon, time(8, 0), time(10, 0)),
             Timeslot::new(1, Weekday::Mon, time(10, 0), time(12, 0)),

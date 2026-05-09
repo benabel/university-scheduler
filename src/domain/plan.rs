@@ -67,10 +67,10 @@ impl Plan {
     /// This runs after generation and after transport decoding so the domain
     /// model always reaches the solver in a normalized state.
     ///
-    /// Sets the `index` field on timeslots, teachers, groups, and rooms to match their
-    /// position in their respective collections. These indexes are used as
-    /// solver-facing join keys for constraint streams (e.g., `lesson.timeslot_idx`
-    /// joins with `timeslot.index`).
+    /// Sets the `index` field on facts and lessons to match their position in
+    /// their respective collections. These indexes are used as solver-facing
+    /// join keys for constraint streams (e.g., `lesson.timeslot_idx` joins with
+    /// `timeslot.index`, while `lesson.index` separates lesson pairs).
     pub fn rebuild_derived_fields(&mut self) {
         for (index, timeslot) in self.timeslots.iter_mut().enumerate() {
             timeslot.index = index;
@@ -85,9 +85,10 @@ impl Plan {
             room.index = index;
         }
 
-        // Validate planning variable assignments to ensure they remain within bounds
-        // after deserialization or data generation
-        for lesson in self.lessons.iter_mut() {
+        // Validate planning variable assignments to ensure they remain within
+        // bounds after deserialization or data generation.
+        for (index, lesson) in self.lessons.iter_mut().enumerate() {
+            lesson.index = index;
             lesson.timeslot_idx = lesson
                 .timeslot_idx
                 .filter(|idx| *idx < self.timeslots.len());
@@ -190,12 +191,36 @@ mod tests {
     }
 
     #[test]
+    fn test_rebuild_derived_fields_restores_lesson_indexes() {
+        use chrono::NaiveTime;
+
+        let timeslots = vec![Timeslot::new(
+            0,
+            Weekday::Mon,
+            NaiveTime::from_hms_opt(8, 0, 0).unwrap(),
+            NaiveTime::from_hms_opt(10, 0, 0).unwrap(),
+        )];
+        let lessons = vec![
+            Lesson::new(0, "Math".to_string(), 0, None, 120),
+            Lesson::new(1, "Physics".to_string(), 0, None, 120),
+        ];
+        let mut plan = Plan::new(timeslots, vec![], vec![], lessons, vec![]);
+
+        plan.lessons[0].index = 0;
+        plan.lessons[1].index = 0;
+        plan.rebuild_derived_fields();
+
+        assert_eq!(plan.lessons[0].index, 0);
+        assert_eq!(plan.lessons[1].index, 1);
+    }
+
+    #[test]
     fn test_getters_return_none_for_invalid_indices() {
         use chrono::NaiveTime;
 
         let timeslots = vec![Timeslot::new(0, Weekday::Mon, NaiveTime::from_hms_opt(8, 0, 0).unwrap(), NaiveTime::from_hms_opt(10, 0, 0).unwrap())];
         let teachers = vec![Teacher::new(0, "Teacher A", [true; 10])];
-        let groups = vec![Group::new(0, "Group A", [true; 10])];
+        let groups = vec![Group::new(0, "Group A", 30, [true; 10])];
         let rooms = vec![Room::new(0, "Room A")];
         let lessons = vec![];
 

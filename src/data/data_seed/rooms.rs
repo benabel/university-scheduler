@@ -1,10 +1,13 @@
 use crate::domain::Room;
 
-use super::vocabulary::ROOM_NAME_PREFIX;
+use super::vocabulary::room_specs;
 
 pub(super) fn build_rooms(count: usize) -> Vec<Room> {
-    (0..count)
-        .map(|index| Room::new(index, format!("{ROOM_NAME_PREFIX} {index}")))
+    room_specs()
+        .iter()
+        .take(count)
+        .enumerate()
+        .map(|(index, spec)| Room::with_kind_capacity(index, spec.name, spec.kind, spec.capacity))
         .collect()
 }
 
@@ -14,9 +17,10 @@ mod tests {
 
     #[test]
     fn test_build_rooms() {
-        let rooms = build_rooms(6);
-        assert_eq!(rooms.len(), 6);
+        let rooms = build_rooms(10);
+        assert_eq!(rooms.len(), 10);
         assert_eq!(rooms[0].id, "room-0");
-        assert_eq!(rooms[0].name, "Room 0");
+        assert_eq!(rooms[0].name, "Auditorium A");
+        assert_eq!(rooms[7].name, "Computer Lab");
     }
 }
