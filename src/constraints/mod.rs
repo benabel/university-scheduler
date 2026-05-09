@@ -10,6 +10,8 @@ use solverforge::prelude::*;
 pub use self::assemble::create_constraints;
 
 // @solverforge:begin constraint-modules
+mod assign_room;
+mod assign_timeslot;
 mod no_group_conflict;
 mod no_teacher_conflict;
 mod no_room_conflict;
@@ -21,6 +23,8 @@ mod assemble {
     pub fn create_constraints() -> impl ConstraintSet<Plan, HardMediumSoftScore> {
         // @solverforge:begin constraint-calls
         (
+            assign_timeslot::constraint(),
+            assign_room::constraint(),
             no_group_conflict::constraint(),
             no_teacher_conflict::constraint(),
             no_room_conflict::constraint(),
