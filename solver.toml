@@ -1,6 +1,8 @@
 [[phases]]
 type = "construction_heuristic"
-construction_heuristic_type = "first_fit"
+construction_heuristic_type = "cheapest_insertion"
+construction_obligation = "assign_when_candidate_exists"
+value_candidate_limit = 40
 
 [[phases]]
 type = "local_search"
