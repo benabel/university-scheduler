@@ -1,18 +1,31 @@
 # university-scheduler
 
-A SolverForge constraint optimization project (scaffold: `neutral scaffold`).
+A SolverForge university timetable optimizer.
 
 ## Versioning
 
-- CLI version used to scaffold this project: `2.0.1`
-- SolverForge runtime target for this scaffold: `solverforge 0.9.1`
-- SolverForge UI target for this scaffold: `solverforge-ui 0.6.3`
-- SolverForge maps target for this scaffold: `solverforge-maps 2.1.3`
-- Runtime dependency currently wired into `Cargo.toml`: `crates.io: solverforge 0.9.1`
-- Frontend UI dependency currently wired into `Cargo.toml`: `crates.io: solverforge-ui 0.6.3`
-- Maps dependency currently wired into `Cargo.toml`: `crates.io: solverforge-maps 2.1.3`
+- CLI version used to scaffold this project: `2.0.4`
+- SolverForge runtime target for this scaffold: `solverforge 0.12.0`
+- SolverForge UI target for this scaffold: `solverforge-ui 0.6.5`
+- Runtime dependency currently wired into `Cargo.toml`: `crates.io: solverforge 0.12.0`
+- Frontend UI dependency currently wired into `Cargo.toml`: `crates.io: solverforge-ui 0.6.5`
 
-This project was scaffolded by `solverforge-cli`, and it currently targets `SolverForge crate target 0.9.1` through the configured crate dependency targets.
+This project was scaffolded by `solverforge-cli`, and currently targets `SolverForge 0.12.0` through the configured crate dependency.
+
+## Model
+
+The app schedules 100 lessons for 4 student groups across 40 weekly timeslots
+and 10 rooms. Lessons are planning entities; timeslots, teachers, groups, and
+rooms are problem facts.
+
+The score type is `HardMediumSoftScore`:
+
+- Hard constraints prevent teacher, group, and room overlaps.
+- Medium constraints require every lesson to receive a timeslot and a room.
+- Soft constraints are not currently used.
+
+The shipped demo data surface exposes a single deterministic dataset:
+`LARGE`.
 
 ## Quick Start
 
