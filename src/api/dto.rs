@@ -112,7 +112,9 @@ impl PlanDto {
         let mut fields = self.fields.clone();
         let _ = &self.score;
         fields.insert("score".to_string(), Value::Null);
-        serde_json::from_value(Value::Object(fields))
+        let mut plan: Plan = serde_json::from_value(Value::Object(fields))?;
+        plan.rebuild_derived_fields();
+        Ok(plan)
     }
 }
 
@@ -245,5 +247,41 @@ fn derive_acceptance_rate(moves_accepted: u64, moves_evaluated: u64) -> f64 {
         0.0
     } else {
         moves_accepted as f64 / moves_evaluated as f64
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::constraints::create_constraints;
+    use crate::data::{generate, DemoData};
+    use solverforge::ConstraintSet;
+
+    #[test]
+    fn plan_dto_round_trip_restores_lesson_indexes() {
+        let dto = PlanDto::from_plan(&generate(DemoData::Large));
+        let plan = dto.to_domain().expect("DTO should decode into a plan");
+
+        for (index, lesson) in plan.lessons.iter().enumerate() {
+            assert_eq!(lesson.index, index);
+        }
+    }
+
+    #[test]
+    fn plan_dto_round_trip_preserves_hard_conflict_detection() {
+        let mut plan = generate(DemoData::Large);
+        plan.lessons[0].timeslot_idx = Some(0);
+        plan.lessons[0].room_idx = Some(0);
+        plan.lessons[1].timeslot_idx = Some(0);
+        plan.lessons[1].room_idx = Some(0);
+
+        let dto = PlanDto::from_plan(&plan);
+        let round_tripped = dto.to_domain().expect("DTO should decode into a plan");
+        let score = create_constraints().evaluate_all(&round_tripped);
+
+        assert!(
+            score.hard() < 0,
+            "round-tripped plan must still detect hard conflicts, got {score}"
+        );
     }
 }
