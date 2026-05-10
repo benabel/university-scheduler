@@ -1,16 +1,28 @@
-/* state.js — Centralized state management for university-scheduler
- *
- * AppState: single source of truth with Observer pattern
- * Contains only observable business data:
- * currentPlan, demoCatalog, activeTab, lastAnalysis
- * No project internals, knows neither DOM nor SF
- */
+/* state.js — Centralized state management for university-scheduler */
 
-// Initial state - business data only
+// Constants
+export const SLOT_MINUTES = 60;
+export const DEFAULT_VIEWPORT_SLOTS = 12;
+export const TIMELINE_TONES = [
+	"emerald",
+	"blue",
+	"amber",
+	"rose",
+	"violet",
+	"slate",
+];
+
+// Initial state
 const initialState = {
 	// Config and UI model
 	config: null,
 	uiModel: null,
+
+	// UI objects
+	backend: null,
+	header: null,
+	statusBar: null,
+	analysisModal: null,
 
 	// Data state
 	currentPlan: null,
@@ -21,9 +33,12 @@ const initialState = {
 
 	// Solver state
 	solver: null,
+
+	// UI tabs
+	tabs: [],
 };
 
-// Central state class with listeners (Observer pattern)
+// Central state class with listeners
 class AppState {
 	constructor() {
 		this.state = { ...initialState };
@@ -67,15 +82,3 @@ class AppState {
 
 // Singleton instance
 export const state = new AppState();
-
-// Re-export constants for backwards compatibility
-export const SLOT_MINUTES = 60;
-export const DEFAULT_VIEWPORT_SLOTS = 12;
-export const TIMELINE_TONES = [
-	"emerald",
-	"blue",
-	"amber",
-	"rose",
-	"violet",
-	"slate",
-];

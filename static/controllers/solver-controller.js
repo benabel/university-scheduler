@@ -1,23 +1,12 @@
-/* solver-controller.js — Manages solver lifecycle and operations
- *
- * MVP Supervising Presenter layer
- * Orchestrates Model <-> View: reads state, calls presenters,
- * pushes viewModels to SF
- * Only layer that knows all other layers
- */
+/* solver-controller.js — Manages solver lifecycle and operations */
 
-import { backend } from "../services/sf-backend.js";
-import { getRef } from "../services/sf-registry.js";
+import { dom } from "../dom.js";
 import { state } from "../state.js";
+
 import { canSolve, clonePlan, fetchDemoPlan } from "./data-controller.js";
 import { renderAll } from "./render-controller.js";
 
-/**
- * Initialize the solver
- * @returns {Object} - Solver instance
- */
-export function initSolver() {
-	const statusBar = getRef("statusBar");
+export function initSolver(backend, statusBar) {
 	const solver = SF.createSolver({
 		backend: backend,
 		statusBar: statusBar,
@@ -83,9 +72,6 @@ export function initSolver() {
 	return solver;
 }
 
-/**
- * Load and start solving
- */
 export function loadAndSolve() {
 	const solver = state.get("solver");
 	if (
@@ -106,9 +92,6 @@ export function loadAndSolve() {
 		});
 }
 
-/**
- * Pause solving
- */
 export function pauseSolve() {
 	const solver = state.get("solver");
 	solver
@@ -121,9 +104,6 @@ export function pauseSolve() {
 		});
 }
 
-/**
- * Resume solving
- */
 export function resumeSolve() {
 	const solver = state.get("solver");
 	solver
@@ -136,9 +116,6 @@ export function resumeSolve() {
 		});
 }
 
-/**
- * Cancel solving
- */
 export function cancelSolve() {
 	const solver = state.get("solver");
 	solver
@@ -151,13 +128,9 @@ export function cancelSolve() {
 		});
 }
 
-/**
- * Open analysis modal
- */
-export async function openAnalysis() {
+export async function openAnalysis(analysisModal) {
 	const solver = state.get("solver");
-	const analysisModal = getRef("analysisModal");
-	if (!solver.getJobId() || !analysisModal) return;
+	if (!solver.getJobId()) return;
 
 	try {
 		const analysis = await solver.analyzeSnapshot();
@@ -169,10 +142,7 @@ export async function openAnalysis() {
 	}
 }
 
-/**
- * Resolve plan for solving
- * @returns {Promise<Object>}
- */
+// Resolve plan for solving
 export function resolvePlanForSolve() {
 	const currentPlan = state.get("currentPlan");
 	if (currentPlan) {
@@ -185,10 +155,7 @@ export function resolvePlanForSolve() {
 	return fetchDemoPlan(catalog.defaultId);
 }
 
-/**
- * Cleanup terminal job
- * @returns {Promise<Object|null>}
- */
+// Cleanup terminal job
 export function cleanupTerminalJob() {
 	const solver = state.get("solver");
 	const jobState = solver.getLifecycleState();
@@ -215,13 +182,10 @@ export function cleanupTerminalJob() {
 		});
 }
 
-/**
- * Sync lifecycle markers with DOM
- * @param {Object} meta - Metadata from solver
- */
+// Sync lifecycle markers with DOM
 export function syncLifecycleMarkers(meta) {
 	const solver = state.get("solver");
-	const app = document.getElementById("sf-app");
+	const app = dom.app;
 
 	if (!app) return;
 
@@ -248,12 +212,8 @@ export function syncLifecycleMarkers(meta) {
 	}
 }
 
-/**
- * Build analysis HTML
- * @param {Object} analysis - Analysis data
- * @returns {string}
- */
-function buildAnalysisHtml(analysis) {
+// Build analysis HTML
+export function buildAnalysisHtml(analysis) {
 	if (!analysis || !analysis.constraints)
 		return "<p>No analysis available.</p>";
 	let html = `<p><strong>Score:</strong> ${SF.escHtml(analysis.score)}</p>`;

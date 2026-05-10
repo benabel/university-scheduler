@@ -16,7 +16,7 @@ import { registerRef } from "../services/sf-registry.js";
  */
 export function initLayout(config, uiModel) {
 	// Get or create app container
-	let app = document.getElementById("sf-app");
+	let app = document.querySelector("#sf-app");
 	if (!app) {
 		app = document.createElement("div");
 		app.id = "sf-app";
@@ -49,9 +49,7 @@ export function initLayout(config, uiModel) {
 			onCancel: () => {},
 			onAnalyze: () => {},
 		},
-		onTabChange: (tab) => {
-			// Tab change handler will be set by ui-controller
-		},
+		onTabChange: () => {},
 	});
 	registerRef("header", header);
 
