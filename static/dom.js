@@ -1,4 +1,4 @@
-/* dom.js — Centralized DOM element references for university-scheduler */
+/* dom.js — Centralized DOM element references */
 
 // DOM element references
 const dom = {
@@ -9,14 +9,6 @@ const dom = {
 	viewPanels: {},
 	viewTimelines: {},
 	customTimelines: {},
-
-	// Reset references
-	reset() {
-		this.app = null;
-		this.viewPanels = {};
-		this.viewTimelines = {};
-		this.customTimelines = {};
-	},
 };
 
 export { dom };

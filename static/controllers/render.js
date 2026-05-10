@@ -1,4 +1,4 @@
-/* render-controller.js — Manages all rendering operations */
+/* render.js — Manages all rendering operations */
 
 import { dom } from "../dom.js";
 import { state } from "../state.js";
@@ -7,7 +7,7 @@ import {
 	renderByRoom,
 	renderByTeacher,
 } from "../views/index.js";
-import { canSolve, clonePlan } from "./data-controller.js";
+import { canSolve, clonePlan } from "./data.js";
 
 // Render all views with current data
 export function renderAll(data) {

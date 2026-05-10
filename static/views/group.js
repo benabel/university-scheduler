@@ -1,4 +1,4 @@
-/* group-view.js — Render lessons by group */
+/* group.js — Render lessons by group */
 
 import { dom } from "../dom.js";
 import {
@@ -6,7 +6,7 @@ import {
 	ensureCustomTimeline,
 	entityLabel,
 	timeslotToMinutes,
-} from "./timeline-utils.js";
+} from "../utils/timeline-utils.js";
 
 export function renderByGroup(
 	data,

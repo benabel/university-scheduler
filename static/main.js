@@ -1,16 +1,13 @@
-/* main.js — MVC Entry Point for university-scheduler */
+/* main.js — MVC Entry Point */
 
-import {
-	bootstrapDemoData,
-	loadConfigAndUiModel,
-} from "./controllers/data-controller.js";
+import { bootstrapDemoData } from "./controllers/data.js";
 import {
 	renderAll,
 	updateSolveActionAvailability,
-} from "./controllers/render-controller.js";
+} from "./controllers/render.js";
 
-import { initUI } from "./controllers/ui-controller.js";
-import { TIMELINE_TONES } from "./state.js";
+import { initUI } from "./controllers/ui.js";
+import { state, TIMELINE_TONES } from "./state.js";
 
 // Global toneForKey function (needed by views)
 window.toneForKey = (key) => {
@@ -31,8 +28,8 @@ window.entityLabel = (entity, fallback) => {
 // Initialize the application
 async function initApp() {
 	try {
-		// Step 1: Load configuration and UI model
-		await loadConfigAndUiModel();
+		// Step 1: Initialize state (backend, config, uiModel)
+		await state.init();
 
 		// Step 2: Initialize UI
 		initUI();

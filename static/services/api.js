@@ -11,13 +11,12 @@
  * @param {string} label - Label for error messages
  * @returns {Promise<any>}
  */
-export function requestJson(path, label) {
-	return fetch(path).then((response) => {
-		if (!response.ok) {
-			throw new Error(`${label} returned HTTP ${response.status}`);
-		}
-		return response.json();
-	});
+export async function requestJson(path, label) {
+	const response = await fetch(path);
+	if (!response.ok) {
+		throw new Error(`${label} returned HTTP ${response.status}`);
+	}
+	return response.json();
 }
 
 /**
@@ -45,7 +44,7 @@ export async function fetchDemoPlan(demoId) {
  * @returns {Promise<{config: any, uiModel: any}>}
  */
 export async function loadConfigAndUiModel() {
-	const config = await fetch("/sf-config.json").then((r) => r.json());
-	const uiModel = await fetch("/generated/ui-model.json").then((r) => r.json());
+	const config = await requestJson("/sf-config.json", "config");
+	const uiModel = await requestJson("/generated/ui-model.json", "UI model");
 	return { config, uiModel };
 }

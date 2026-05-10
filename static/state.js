@@ -1,4 +1,6 @@
-/* state.js — Centralized state management for university-scheduler */
+/* state.js — Centralized state management */
+
+import { requestJson } from "./services/api.js";
 
 // Constants
 export const SLOT_MINUTES = 60;
@@ -19,7 +21,6 @@ const initialState = {
 	uiModel: null,
 
 	// UI objects
-	backend: null,
 	header: null,
 	statusBar: null,
 	analysisModal: null,
@@ -45,6 +46,12 @@ class AppState {
 		this.listeners = new Set();
 	}
 
+	async init() {
+		this.state.backend = SF.createBackend({ baseUrl: "" });
+		this.state.config = await requestJson("/sf-config.json", "config");
+		this.state.uiModel = await requestJson("/generated/ui-model.json", "UI model");
+	}
+
 	getState() {
 		return { ...this.state };
 	}
@@ -55,16 +62,6 @@ class AppState {
 
 	set(prop, value) {
 		this.state[prop] = value;
-		this.notify();
-	}
-
-	setMany(newState) {
-		this.state = { ...this.state, ...newState };
-		this.notify();
-	}
-
-	reset() {
-		this.state = { ...initialState };
 		this.notify();
 	}
 

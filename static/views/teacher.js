@@ -1,4 +1,4 @@
-/* teacher-view.js — Render lessons by teacher */
+/* teacher.js — Render lessons by teacher */
 
 import { dom } from "../dom.js";
 import {
@@ -6,7 +6,7 @@ import {
 	ensureCustomTimeline,
 	entityLabel,
 	timeslotToMinutes,
-} from "./timeline-utils.js";
+} from "../utils/timeline-utils.js";
 
 export function renderByTeacher(
 	data,

@@ -1,4 +1,4 @@
-/* data-controller.js — Manages demo data loading and state */
+/* data.js — Manages demo data loading and state */
 
 import { dom } from "../dom.js";
 import { state } from "../state.js";

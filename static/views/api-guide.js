@@ -1,4 +1,4 @@
-/* api-guide-view.js — API guide view construction
+/* api-guide.js — API guide view construction
  *
  * SF element construction and lifecycle
  * Contains no business logic
@@ -11,7 +11,7 @@
  * @param {Object} demoCatalog - Demo catalog data
  */
 export function renderApiGuide(SF, demoCatalog) {
-	const apiGuideContainer = document.getElementById("sf-api-guide");
+	const apiGuideContainer = document.querySelector("#sf-api-guide");
 	if (!apiGuideContainer) return;
 
 	apiGuideContainer.innerHTML = "";

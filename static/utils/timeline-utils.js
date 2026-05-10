@@ -1,16 +1,28 @@
-/* timeline-utils.js — Utility functions for timeline rendering
- *
- * Pure and stateless utilities
- * Helper functions for axis building and timeslot conversion
- */
+/* timeline-utils.js — Utility functions for timeline rendering */
 
-import { DAY_MAP, SLOT_MINUTES, WEEKDAYS } from "./constants.js";
+import { SLOT_MINUTES } from "../state.js";
 
-/**
- * Parse a time string in "HH:MM:SS" or "HH:MM" format to minutes since midnight
- * @param {string} timeStr - Time string
- * @returns {number} - Minutes since midnight (0-1439)
- */
+// Mapping jours de la semaine
+export const DAY_MAP = {
+	Mon: 0,
+	Tue: 1,
+	Wed: 2,
+	Thu: 3,
+	Fri: 4,
+	Sat: 5,
+	Sun: 6,
+};
+export const WEEKDAYS = [
+	"Monday",
+	"Tuesday",
+	"Wednesday",
+	"Thursday",
+	"Friday",
+	"Saturday",
+	"Sunday",
+];
+
+// Parse une heure au format "HH:MM:SS" ou "HH:MM" en minutes depuis minuit
 export function parseTimeToMinutes(timeStr) {
 	if (!timeStr) return 0;
 	const parts = timeStr.split(":");
@@ -20,20 +32,16 @@ export function parseTimeToMinutes(timeStr) {
 	return Math.max(0, Math.min(hours * 60 + minutes, 1439));
 }
 
-/**
- * Convert a timeslot to absolute minutes (from Monday 00:00)
- * @param {Object} timeslot - Timeslot object with day_of_week, start_time, end_time
- * @returns {Object} - { startMinute, endMinute }
- */
+// Convertit un timeslot en minutes absolues (depuis Lundi 00:00)
 export function timeslotToMinutes(timeslot) {
 	if (!timeslot) return { startMinute: 0, endMinute: SLOT_MINUTES };
 	const dayIndex = DAY_MAP[timeslot.day_of_week] || 0;
 	const startMin = parseTimeToMinutes(timeslot.start_time);
 	let endMin = parseTimeToMinutes(timeslot.end_time);
 
-	// Ensure that endMinute > startMinute
+	// Garantir que endMinute > startMinute
 	if (endMin <= startMin) {
-		endMin = startMin + SLOT_MINUTES; // Default duration of 60 minutes
+		endMin = startMin + SLOT_MINUTES; // Durée par défaut de 60 minutes
 	}
 
 	return {
@@ -42,21 +50,17 @@ export function timeslotToMinutes(timeslot) {
 	};
 }
 
-/**
- * Build axis from timeslots for timeline visualization
- * @param {Array} timeslots - Array of timeslot objects
- * @returns {Object} - Axis configuration with days, ticks, viewport
- */
+// Construire l'axe à partir des timeslots
 export function buildAxisFromTimeslots(timeslots) {
 	if (!timeslots || !timeslots.length) {
-		// Fallback: single day from 8h to 18h
+		// Fallback : un seul jour de 8h à 18h
 		return {
 			startMinute: 0,
-			endMinute: 10 * 60, // 10 slots of 60 min
+			endMinute: 10 * 60, // 10 slots de 60 min
 			days: [
 				{
 					id: "day-0",
-					label: "Monday",
+					label: "Lundi",
 					startMinute: 0,
 					endMinute: 1440,
 					isWeekend: false,
@@ -67,7 +71,7 @@ export function buildAxisFromTimeslots(timeslots) {
 		};
 	}
 
-	// Determine which days are present
+	// Déterminer quels jours sont présents
 	const presentDays = [];
 	timeslots.forEach((ts) => {
 		const day = ts.day_of_week;
@@ -81,7 +85,7 @@ export function buildAxisFromTimeslots(timeslots) {
 	const ticks = [];
 	let maxEndMinute = 0;
 
-	// Create day blocks (one per day)
+	// Créer les blocs "days" (un par jour)
 	presentDays.forEach((day) => {
 		const dayIndex = DAY_MAP[day];
 		const dayStart = dayIndex * 1440;
@@ -95,7 +99,7 @@ export function buildAxisFromTimeslots(timeslots) {
 		});
 	});
 
-	// Create hour ticks (8h-18h, every 2h for each day)
+	// Créer les ticks horaires (8h-18h, toutes les 2h pour chaque jour)
 	presentDays.forEach((day) => {
 		const dayIndex = DAY_MAP[day];
 		for (let h = 8; h <= 18; h += 2) {
@@ -107,14 +111,14 @@ export function buildAxisFromTimeslots(timeslots) {
 		}
 	});
 
-	// Calculate max end from timeslots
+	// Calculer la fin maximale à partir des timeslots
 	timeslots.forEach((ts) => {
 		const end =
 			DAY_MAP[ts.day_of_week] * 1440 + parseTimeToMinutes(ts.end_time);
 		maxEndMinute = Math.max(maxEndMinute, end);
 	});
 
-	// If no timeslot has a valid day, use 5 days by default
+	// Si aucun timeslot n'a de jour valide, utiliser 5 jours par défaut
 	if (presentDays.length === 0) {
 		for (let d = 0; d < 5; d++) {
 			days.push({
@@ -147,33 +151,29 @@ export function buildAxisFromTimeslots(timeslots) {
 	};
 }
 
-/**
- * Helper: entity label extraction
- * @param {Object} entity - Entity object
- * @param {any} fallback - Fallback value
- * @returns {string}
- */
+// Ensure custom timeline helper
+export function ensureCustomTimeline(key, customTimelines, SF, timelineConfig) {
+	let timeline = customTimelines[key];
+	if (!timeline) {
+		timeline = SF.rail.createTimeline(timelineConfig);
+		customTimelines[key] = timeline;
+		return timeline;
+	}
+	timeline.setModel(timelineConfig.model);
+	return timeline;
+}
+
+// Helper functions for rendering
 export function entityLabel(entity, fallback) {
 	if (!entity) return String(fallback);
 	return entity.name || entity.id || fallback;
 }
 
-/**
- * Helper: fact label extraction
- * @param {Object} fact - Fact object
- * @param {any} fallback - Fallback value
- * @returns {string}
- */
 export function factLabel(fact, fallback) {
 	if (!fact) return String(fallback);
 	return fact.name || fact.id || fallback;
 }
 
-/**
- * Helper: title formatting (snake_case to Title Case)
- * @param {string} text - Input text
- * @returns {string}
- */
 export function title(text) {
 	return String(text || "")
 		.replace(/_/g, " ")
