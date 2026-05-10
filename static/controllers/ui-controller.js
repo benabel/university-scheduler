@@ -1,10 +1,15 @@
-/* ui-controller.js — Manages UI initialization and tab switching */
+/* ui-controller.js — Manages UI initialization and tab switching
+ *
+ * MVP Supervising Presenter layer
+ * Orchestrates Model <-> View: reads state, calls presenters,
+ * pushes viewModels to SF
+ * Only layer that knows all other layers
+ */
 
-import { state } from "../state/state.js";
-import {
-	renderApiGuide,
-	updateSolveActionAvailability,
-} from "./render-controller.js";
+import { getRef } from "../services/sf-registry.js";
+import { state } from "../state.js";
+import { initLayout, renderApiGuide } from "../views/index.js";
+import { updateSolveActionAvailability } from "./render-controller.js";
 import {
 	cancelSolve,
 	initSolver,
@@ -12,238 +17,163 @@ import {
 	openAnalysis,
 	pauseSolve,
 	resumeSolve,
+	syncLifecycleMarkers,
 } from "./solver-controller.js";
 
-// Initialize the UI
-export function initUI() {
-	const app = document.getElementById("sf-app");
-	state.set("app", app);
-
-	// Load config and UI model
-	const backend = SF.createBackend({ baseUrl: "" });
-	state.set("backend", backend);
-
+/**
+ * Initialize the UI
+ * @returns {Promise<{config: Object, uiModel: Object}>}
+ */
+export async function initUI() {
+	// Initialize layout
 	const config = state.get("config");
 	const uiModel = state.get("uiModel");
 
-	const statusBar = SF.createStatusBar({
-		constraints: uiModel?.constraints || [],
-	});
-	state.set("statusBar", statusBar);
+	const { app, header } = initLayout(config, uiModel);
+	console.log(app, header);
 
-	// Build tabs
-	const tabs = [];
-	tabs.push({ id: "by-group", label: "By Group", icon: "fa-users" });
-	tabs.push({ id: "by-room", label: "By Room", icon: "fa-door-open" });
-	tabs.push({
-		id: "by-teacher",
-		label: "By Teacher",
-		icon: "fa-chalkboard-user",
-	});
-	tabs.push({ id: "data", label: "Data", icon: "fa-table" });
-	tabs.push({ id: "api", label: "REST API", icon: "fa-book" });
-	state.set("tabs", tabs);
+	// Initialize solver BEFORE setting up header actions
+	// so that action handlers can access the solver from state
+	const solver = initSolver();
+	state.set("solver", solver);
 
-	// Create header
-	const header = SF.createHeader({
-		logo: "/sf/img/ouroboros.svg",
-		title: config?.title || "University Scheduler",
-		subtitle: config?.subtitle || "",
-		tabs: tabs,
-		actions: {
-			onSolve: () => {
-				loadAndSolve();
-			},
-			onPause: () => {
-				pauseSolve();
-			},
-			onResume: () => {
-				resumeSolve();
-			},
-			onCancel: () => {
-				cancelSolve();
-			},
-			onAnalyze: () => {
-				const analysisModal = state.get("analysisModal");
-				openAnalysis(analysisModal);
-			},
-		},
-		onTabChange: (tab) => {
-			state.set("activeTab", tab);
-			handleTabChange(tab);
-		},
-	});
-	state.set("header", header);
+	// Setup header actions
+	setupHeaderActions(header);
 
-	// Append header and status bar
-	app.appendChild(header);
-	statusBar.bindHeader(header);
-	app.appendChild(statusBar.el);
-
-	// Create bootstrap notice
-	const bootstrapNotice = SF.el("div", {
-		className: "bootstrap-notice",
-		style: {
-			display: "none",
-			padding: "16px",
-			marginBottom: "16px",
-			borderRadius: "12px",
-			border: "1px solid #dc2626",
-			background: "#fef2f2",
-			color: "#991b1b",
-		},
-	});
-	app.appendChild(bootstrapNotice);
-
-	// Create overview panel
-	const overviewPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: state.get("activeTab") === "overview" ? "" : "none" },
-	});
-	const overviewContainer = SF.el("div", { id: "sf-overview" });
-	overviewPanel.appendChild(overviewContainer);
-	app.appendChild(overviewPanel);
-
-	// Create view panels from uiModel
-	const viewPanels = {};
-	(uiModel?.views || []).forEach((view) => {
-		const panel = SF.el("div", {
-			className: "sf-content",
-			style: { display: state.get("activeTab") === view.id ? "" : "none" },
-		});
-		panel.appendChild(SF.el("div", { id: `view-${view.id}` }));
-		viewPanels[view.id] = panel;
-		app.appendChild(panel);
-	});
-	state.set("viewPanels", viewPanels);
-
-	// Create data panel
-	const dataPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: "none" },
-	});
-	const tablesContainer = SF.el("div", { id: "sf-tables" });
-	dataPanel.appendChild(tablesContainer);
-	app.appendChild(dataPanel);
-
-	// Create API panel
-	const apiPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: "none" },
-	});
-	const apiGuideContainer = SF.el("div", { id: "sf-api-guide" });
-	apiPanel.appendChild(apiGuideContainer);
-	app.appendChild(apiPanel);
-
-	// Create custom view panels
-	const byGroupPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: "none" },
-	});
-	const byGroupContainer = SF.el("div", { id: "sf-by-group" });
-	byGroupPanel.appendChild(byGroupContainer);
-	app.appendChild(byGroupPanel);
-	viewPanels["by-group"] = byGroupPanel;
-
-	const byRoomPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: "none" },
-	});
-	const byRoomContainer = SF.el("div", { id: "sf-by-room" });
-	byRoomPanel.appendChild(byRoomContainer);
-	app.appendChild(byRoomPanel);
-	viewPanels["by-room"] = byRoomPanel;
-
-	const byTeacherPanel = SF.el("div", {
-		className: "sf-content",
-		style: { display: "none" },
-	});
-	const byTeacherContainer = SF.el("div", { id: "sf-by-teacher" });
-	byTeacherPanel.appendChild(byTeacherContainer);
-	app.appendChild(byTeacherPanel);
-	viewPanels["by-teacher"] = byTeacherPanel;
-
-	// Set all view panels in state
-	state.set("viewPanels", {
-		...viewPanels,
-		"by-group": byGroupPanel,
-		"by-room": byRoomPanel,
-		"by-teacher": byTeacherPanel,
-	});
-
-	// Create footer
-	app.appendChild(
-		SF.createFooter({
-			links: [
-				{ label: "SolverForge", url: "https://www.solverforge.org" },
-				{ label: "Docs", url: "https://www.solverforge.org/docs" },
-			],
-		}),
-	);
-
-	// Create analysis modal
-	const analysisModal = SF.createModal({
-		title: "Score Analysis",
-		width: "700px",
-	});
-	state.set("analysisModal", analysisModal);
-
-	// Initialize solver
-	const _solver = initSolver(backend, statusBar);
+	// Setup tab change handler
+	setupTabChangeHandler(header);
 
 	// Render API guide
-	renderApiGuide();
+	renderApiGuide(SF, state.get("demoCatalog"));
 	updateSolveActionAvailability();
 
 	// Add beforeunload handler
 	window.addEventListener("beforeunload", () => {
 		const solver = state.get("solver");
 		if (solver) {
-			const viewTimelines = state.get("viewTimelines") || {};
-			const customTimelines = state.get("customTimelines") || {};
-
-			// Destroy all timelines
-			Object.keys(viewTimelines).forEach((viewId) => {
-				if (viewTimelines[viewId]) {
-					viewTimelines[viewId].destroy();
-				}
-			});
-			Object.keys(customTimelines).forEach((key) => {
-				if (customTimelines[key]) {
-					customTimelines[key].destroy();
-				}
-			});
+			// Cleanup will be handled by timeline-manager
 		}
+	});
+
+	return { config, uiModel };
+}
+
+/**
+ * Setup header action handlers
+ * @param {Object} header - SF header instance
+ */
+function setupHeaderActions(header) {
+	const analysisModal = getRef("analysisModal");
+
+	// Update header with actual action handlers
+	header.setActions({
+		onSolve: () => {
+			loadAndSolve();
+		},
+		onPause: () => {
+			pauseSolve();
+		},
+		onResume: () => {
+			resumeSolve();
+		},
+		onCancel: () => {
+			cancelSolve();
+		},
+		onAnalyze: () => {
+			if (analysisModal) {
+				openAnalysis();
+			}
+		},
 	});
 }
 
-// Handle tab change
+/**
+ * Setup tab change handler
+ * @param {Object} header - SF header instance
+ */
+function setupTabChangeHandler(header) {
+	header.onTabChange = (tab) => {
+		state.set("activeTab", tab);
+		handleTabChange(tab);
+	};
+}
+
+/**
+ * Handle tab change
+ * @param {string} tab - Active tab ID
+ */
 export function handleTabChange(tab) {
-	const viewPanels = state.get("viewPanels");
-	const _activeTab = state.get("activeTab");
+	// Get all panels from DOM
+	const app = getRef("app") || document.getElementById("sf-app");
+	if (!app) return;
 
-	// Hide all panels
-	Object.keys(viewPanels).forEach((key) => {
-		if (viewPanels[key]?.style) {
-			viewPanels[key].style.display = key === tab ? "" : "none";
-		}
+	// Hide all content panels
+	const allPanels = app.querySelectorAll(".sf-content");
+	allPanels.forEach((panel) => {
+		panel.style.display = "none";
 	});
 
-	// Show/hide specific panels
-	const overviewPanel = document.getElementById("sf-overview")?.parentElement;
-	const dataPanel = document.getElementById("sf-tables")?.parentElement;
-	const apiPanel = document.getElementById("sf-api-guide")?.parentElement;
-	const byGroupPanel = viewPanels["by-group"];
-	const byRoomPanel = viewPanels["by-room"];
-	const byTeacherPanel = viewPanels["by-teacher"];
+	// Show the selected panel
+	const activePanel = findPanelForTab(tab);
+	if (activePanel) {
+		activePanel.style.display = "";
+	}
 
-	if (overviewPanel)
-		overviewPanel.style.display = tab === "overview" ? "" : "none";
-	if (dataPanel) dataPanel.style.display = tab === "data" ? "" : "none";
-	if (apiPanel) apiPanel.style.display = tab === "api" ? "" : "none";
-	if (byGroupPanel)
-		byGroupPanel.style.display = tab === "by-group" ? "" : "none";
-	if (byRoomPanel) byRoomPanel.style.display = tab === "by-room" ? "" : "none";
-	if (byTeacherPanel)
-		byTeacherPanel.style.display = tab === "by-teacher" ? "" : "none";
+	// Special cases for panels that need extra handling
+	if (tab === "api") {
+		renderApiGuide(SF, state.get("demoCatalog"));
+	}
 }
+
+/**
+ * Find panel for a given tab
+ * @param {string} tabId - Tab ID
+ * @returns {HTMLElement|null}
+ */
+function findPanelForTab(tabId) {
+	const app = getRef("app") || document.getElementById("sf-app");
+	if (!app) return null;
+
+	// Try to find panel by ID
+	const panelMap = {
+		overview: "sf-overview",
+		"by-group": "sf-by-group",
+		"by-room": "sf-by-room",
+		"by-teacher": "sf-by-teacher",
+		data: "sf-tables",
+		api: "sf-api-guide",
+	};
+
+	if (panelMap[tabId]) {
+		const container = document.getElementById(panelMap[tabId]);
+		if (container) {
+			return container.parentElement;
+		}
+	}
+
+	// Try to find view panel
+	const viewPanel = document.getElementById(`view-${tabId}`);
+	if (viewPanel) {
+		return viewPanel.parentElement;
+	}
+
+	// Fallback: find any panel containing the tab ID
+	const allPanels = app.querySelectorAll(".sf-content");
+	for (const panel of allPanels) {
+		if (
+			panel.querySelector(`#sf-${tabId}`) ||
+			panel.querySelector(`#view-${tabId}`)
+		) {
+			return panel;
+		}
+	}
+
+	return null;
+}
+
+/**
+ * Sync lifecycle markers to DOM
+ * Wraps solver-controller's syncLifecycleMarkers for UI layer
+ * @param {Object} meta - Metadata from solver
+ */
+export { syncLifecycleMarkers };

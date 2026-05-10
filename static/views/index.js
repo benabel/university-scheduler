@@ -1,16 +1,16 @@
-/* view/index.js — Central export for all view modules */
+/* views/index.js — Central export for all view modules
+ *
+ * SF element construction and lifecycle
+ * Contains no business logic
+ * Re-exports all view modules
+ */
 
-export { renderByGroup } from "./group-view.js";
-export { renderByRoom } from "./room-view.js";
-export { renderByTeacher } from "./teacher-view.js";
+export { renderApiGuide } from "./api-guide-view.js";
+export { initLayout } from "./layout.js";
 export {
-	buildAxisFromTimeslots,
-	DAY_MAP,
-	ensureCustomTimeline,
-	entityLabel,
-	factLabel,
-	parseTimeToMinutes,
-	timeslotToMinutes,
-	title,
-	WEEKDAYS,
-} from "./timeline-utils.js";
+	destroyAllTimelines,
+	destroyTimeline,
+	ensureTimeline,
+	getAllTimelineKeys,
+	getTimeline,
+} from "./timeline-manager.js";
