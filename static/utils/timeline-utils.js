@@ -1,6 +1,6 @@
 /* timeline-utils.js — Utility functions for timeline rendering */
 
-import { SLOT_MINUTES } from "../state.js";
+import { SLOT_MINUTES } from "../model/state.js";
 
 // Mapping jours de la semaine
 export const DAY_MAP = {

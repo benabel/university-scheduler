@@ -1,6 +1,6 @@
 /* state.js — Centralized state management */
 
-import { requestJson } from "./services/api.js";
+import { requestJson } from "../services/api.js";
 
 // Constants
 export const SLOT_MINUTES = 60;
@@ -49,7 +49,10 @@ class AppState {
 	async init() {
 		this.state.backend = SF.createBackend({ baseUrl: "" });
 		this.state.config = await requestJson("/sf-config.json", "config");
-		this.state.uiModel = await requestJson("/generated/ui-model.json", "UI model");
+		this.state.uiModel = await requestJson(
+			"/generated/ui-model.json",
+			"UI model",
+		);
 	}
 
 	getState() {

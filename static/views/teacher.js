@@ -1,6 +1,6 @@
 /* teacher.js — Render lessons by teacher */
 
-import { dom } from "../dom.js";
+import { dom } from "../model/dom.js";
 import {
 	buildAxisFromTimeslots,
 	ensureCustomTimeline,

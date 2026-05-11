@@ -1,7 +1,7 @@
 /* data.js — Manages demo data loading and state */
 
-import { dom } from "../dom.js";
-import { state } from "../state.js";
+import { dom } from "../model/dom.js";
+import { state } from "../model/state.js";
 
 // Fetch JSON helper
 export function requestJson(path, label) {

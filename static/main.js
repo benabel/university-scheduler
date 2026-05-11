@@ -7,7 +7,7 @@ import {
 } from "./controllers/render.js";
 
 import { initUI } from "./controllers/ui.js";
-import { state, TIMELINE_TONES } from "./state.js";
+import { state, TIMELINE_TONES } from "./model/state.js";
 
 // Global toneForKey function (needed by views)
 window.toneForKey = (key) => {

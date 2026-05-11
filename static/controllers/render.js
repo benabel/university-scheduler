@@ -1,7 +1,7 @@
 /* render.js — Manages all rendering operations */
 
-import { dom } from "../dom.js";
-import { state } from "../state.js";
+import { dom } from "../model/dom.js";
+import { state } from "../model/state.js";
 import {
 	renderByGroup,
 	renderByRoom,

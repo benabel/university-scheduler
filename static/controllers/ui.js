@@ -1,7 +1,7 @@
 /* ui.js — Manages UI initialization and tab switching */
 
-import { dom } from "../dom.js";
-import { state } from "../state.js";
+import { dom } from "../model/dom.js";
+import { state } from "../model/state.js";
 import {
 	renderApiGuide,
 	updateSolveActionAvailability,

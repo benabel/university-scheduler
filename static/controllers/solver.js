@@ -1,7 +1,7 @@
 /* solver.js — Manages solver lifecycle and operations */
 
-import { dom } from "../dom.js";
-import { state } from "../state.js";
+import { dom } from "../model/dom.js";
+import { state } from "../model/state.js";
 
 import { canSolve, clonePlan, fetchDemoPlan } from "./data.js";
 import { renderAll } from "./render.js";

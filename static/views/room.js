@@ -1,6 +1,6 @@
 /* room.js — Render lessons by room */
 
-import { dom } from "../dom.js";
+import { dom } from "../model/dom.js";
 import {
 	buildAxisFromTimeslots,
 	ensureCustomTimeline,
