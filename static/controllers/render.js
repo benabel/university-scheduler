@@ -2,12 +2,23 @@
 
 import { dom } from "../model/dom.js";
 import { state } from "../model/state.js";
+import { TIMELINE_TONES, SLOT_MINUTES, DEFAULT_VIEWPORT_SLOTS } from "../utils/constants.js";
 import {
 	renderByGroup,
 	renderByRoom,
 	renderByTeacher,
 } from "../views/index.js";
 import { canSolve, clonePlan } from "./data.js";
+
+// toneForKey function (needed by views)
+const toneForKey = (key) => {
+	const text = String(key || "");
+	let hash = 0;
+	for (let index = 0; index < text.length; index += 1) {
+		hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
+	}
+	return TIMELINE_TONES[hash % TIMELINE_TONES.length];
+};
 
 // Render all views with current data
 export function renderAll(data) {
@@ -18,18 +29,18 @@ export function renderAll(data) {
 	renderViews(data);
 	renderTables(data);
 
-	// Get containers from dom
+	// Get panels from dom
 	const _viewPanels = dom.viewPanels;
-	const byGroupContainer = document.querySelector("#sf-by-group");
-	const byRoomContainer = document.querySelector("#sf-by-room");
-	const byTeacherContainer = document.querySelector("#sf-by-teacher");
+	const byGroupPanel = document.querySelector("#sf-by-group");
+	const byRoomPanel = document.querySelector("#sf-by-room");
+	const byTeacherPanel = document.querySelector("#sf-by-teacher");
 
 	// Custom timelines from dom
 	const customTimelines = dom.customTimelines || {};
 
 	renderByGroup(
 		data,
-		byGroupContainer,
+		byGroupPanel,
 		SF,
 		toneForKey,
 		entityLabel,
@@ -37,7 +48,7 @@ export function renderAll(data) {
 	);
 	renderByRoom(
 		data,
-		byRoomContainer,
+		byRoomPanel,
 		SF,
 		toneForKey,
 		entityLabel,
@@ -45,7 +56,7 @@ export function renderAll(data) {
 	);
 	renderByTeacher(
 		data,
-		byTeacherContainer,
+		byTeacherPanel,
 		SF,
 		toneForKey,
 		entityLabel,
@@ -59,20 +70,20 @@ export function renderAll(data) {
 // Render overview
 export function renderOverview(data) {
 	const uiModel = state.get("uiModel");
-	const overviewContainer = document.querySelector("#sf-overview");
+	const overviewPanel = document.querySelector("#sf-overview");
 
-	if (!overviewContainer) return;
+	if (!overviewPanel) return;
 
-	overviewContainer.innerHTML = "";
+	overviewPanel.innerHTML = "";
 	if ((uiModel?.views || []).length) {
-		overviewContainer.appendChild(
+		overviewPanel.appendChild(
 			SF.el(
 				"p",
 				null,
 				"The generated views now mount the standard solverforge-ui timeline surface for every planning variable declared in your project.",
 			),
 		);
-		overviewContainer.appendChild(
+		overviewPanel.appendChild(
 			SF.createTable({
 				columns: ["Active views", "Constraints", "Current score"],
 				rows: [
@@ -86,7 +97,7 @@ export function renderOverview(data) {
 		);
 		return;
 	}
-	overviewContainer.appendChild(
+	overviewPanel.appendChild(
 		SF.el(
 			"p",
 			null,
@@ -100,18 +111,18 @@ export function renderViews(data) {
 	const uiModel = state.get("uiModel");
 
 	(uiModel?.views || []).forEach((view) => {
-		const container = document.getElementById(`view-${view.id}`);
-		if (!container) return;
+		const panel = document.getElementById(`view-${view.id}`);
+		if (!panel) return;
 		if (view.kind === "list") {
 			renderTimelinePanel(
-				container,
+				panel,
 				view.id,
 				buildListViewPayload(data, view),
 				"This list-variable timeline will appear once the referenced facts and entities contain data.",
 			);
 		} else {
 			renderTimelinePanel(
-				container,
+				panel,
 				view.id,
 				buildScalarViewPayload(data, view),
 				"This scalar-variable timeline will appear once the referenced facts and entities contain data.",
@@ -121,18 +132,18 @@ export function renderViews(data) {
 }
 
 // Render timeline panel
-export function renderTimelinePanel(container, viewId, payload, emptyMessage) {
+export function renderTimelinePanel(panel, viewId, payload, emptyMessage) {
 	const viewTimelines = dom.viewTimelines;
 
-	container.innerHTML = "";
+	panel.innerHTML = "";
 	if (!payload) {
 		destroyTimeline(viewId);
-		container.appendChild(SF.el("p", null, emptyMessage));
+		panel.appendChild(SF.el("p", null, emptyMessage));
 		return;
 	}
 
-	container.appendChild(payload.summary);
-	container.appendChild(
+	panel.appendChild(payload.summary);
+	panel.appendChild(
 		ensureTimeline(viewId, payload.timeline, viewTimelines).el,
 	);
 }
@@ -370,11 +381,11 @@ export function buildListViewPayload(data, view) {
 // Render tables
 export function renderTables(data) {
 	const uiModel = state.get("uiModel");
-	const tablesContainer = document.querySelector("#sf-tables");
+	const tablesPanel = document.querySelector("#sf-tables");
 
-	if (!tablesContainer) return;
+	if (!tablesPanel) return;
 
-	tablesContainer.innerHTML = "";
+	tablesPanel.innerHTML = "";
 	(uiModel?.entities || []).concat(uiModel?.facts || []).forEach((entry) => {
 		const rows = data[entry.plural] || [];
 		if (!rows.length) return;
@@ -393,16 +404,16 @@ export function renderTables(data) {
 		const section = SF.el("div", { className: "sf-section" });
 		section.appendChild(SF.el("h3", null, entry.label));
 		section.appendChild(SF.createTable({ columns: cols, rows: values }));
-		tablesContainer.appendChild(section);
+		tablesPanel.appendChild(section);
 	});
 }
 
 // Render API guide
 export function renderApiGuide() {
-	const apiGuideContainer = document.querySelector("#sf-api-guide");
-	if (!apiGuideContainer) return;
+	const apiGuidePanel = document.querySelector("#sf-api-guide");
+	if (!apiGuidePanel) return;
 
-	apiGuideContainer.innerHTML = "";
+	apiGuidePanel.innerHTML = "";
 	const demoCatalog = state.get("demoCatalog");
 	const defaultDemoPath = demoCatalog?.defaultId
 		? `/demo-data/${demoCatalog.defaultId}`
@@ -482,7 +493,7 @@ export function renderApiGuide() {
 		},
 	];
 
-	apiGuideContainer.appendChild(SF.createApiGuide({ endpoints: endpoints }));
+	apiGuidePanel.appendChild(SF.createApiGuide({ endpoints: endpoints }));
 }
 
 // Update solve action availability
@@ -519,9 +530,6 @@ export function findHeaderButton(label, header) {
 
 // Build slot axis
 export function buildSlotAxis(slotCount) {
-	const SLOT_MINUTES = 60;
-	const DEFAULT_VIEWPORT_SLOTS = 12;
-
 	const normalizedSlots = Math.max(slotCount, 1);
 	const groupSize = normalizedSlots > 24 ? 8 : normalizedSlots > 12 ? 6 : 4;
 	const days = [];
@@ -562,15 +570,6 @@ export function buildSlotAxis(slotCount) {
 // Build timeline item
 export function buildTimelineItem(id, slotIndex, label, meta, toneKey) {
 	const SLOT_MINUTES = 60;
-	const TIMELINE_TONES = [
-		"emerald",
-		"blue",
-		"amber",
-		"rose",
-		"violet",
-		"slate",
-	];
-
 	return {
 		id: id,
 		startMinute: slotIndex * SLOT_MINUTES,
@@ -598,20 +597,7 @@ export function listLaneBadges(length, longestSequence) {
 	return badges;
 }
 
-// Tone for key
-export function toneForKey(
-	key,
-	tones = ["emerald", "blue", "amber", "rose", "violet", "slate"],
-) {
-	const text = String(key || "");
-	let hash = 0;
 
-	for (let index = 0; index < text.length; index += 1) {
-		hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
-	}
-
-	return tones[hash % tones.length];
-}
 
 // Entity label
 export function entityLabel(entity, fallback) {

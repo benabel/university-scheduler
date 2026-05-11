@@ -10,7 +10,7 @@ import {
 
 export function renderByGroup(
 	data,
-	container,
+	panel,
 	SF,
 	toneForKey,
 	customTimelinesRef = null,
@@ -21,7 +21,7 @@ export function renderByGroup(
 	const rooms = data.rooms || [];
 
 	if (!lessons.length) {
-		container.innerHTML = "<p>No lessons available.</p>";
+		panel.innerHTML = "<p>No lessons available.</p>";
 		return;
 	}
 
@@ -100,17 +100,17 @@ export function renderByGroup(
 		model: { axis: axis, lanes: lanes },
 	});
 
-	container.innerHTML = "";
+	panel.innerHTML = "";
 	const realGroupCount = Object.keys(byGroup).filter(
 		(key) => key !== "Unassigned",
 	).length;
-	container.appendChild(
+	panel.appendChild(
 		SF.createTable({
 			columns: ["Total Groups", "Total Lessons"],
 			rows: [[String(realGroupCount), String(lessons.length)]],
 		}),
 	);
-	container.appendChild(timeline.el);
+	panel.appendChild(timeline.el);
 
 	// Update dom if using dom-managed timelines
 	if (!customTimelinesRef) {

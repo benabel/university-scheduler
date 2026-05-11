@@ -11,10 +11,10 @@
  * @param {Object} demoCatalog - Demo catalog data
  */
 export function renderApiGuide(SF, demoCatalog) {
-	const apiGuideContainer = document.querySelector("#sf-api-guide");
-	if (!apiGuideContainer) return;
+	const apiGuidePanel = document.querySelector("#sf-api-guide");
+	if (!apiGuidePanel) return;
 
-	apiGuideContainer.innerHTML = "";
+	apiGuidePanel.innerHTML = "";
 
 	const defaultDemoPath = demoCatalog?.defaultId
 		? `/demo-data/${demoCatalog.defaultId}`
@@ -94,7 +94,7 @@ export function renderApiGuide(SF, demoCatalog) {
 		},
 	];
 
-	apiGuideContainer.appendChild(SF.createApiGuide({ endpoints: endpoints }));
+	apiGuidePanel.appendChild(SF.createApiGuide({ endpoints: endpoints }));
 }
 
 /**

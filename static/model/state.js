@@ -2,18 +2,6 @@
 
 import { requestJson } from "../services/api.js";
 
-// Constants
-export const SLOT_MINUTES = 60;
-export const DEFAULT_VIEWPORT_SLOTS = 12;
-export const TIMELINE_TONES = [
-	"emerald",
-	"blue",
-	"amber",
-	"rose",
-	"violet",
-	"slate",
-];
-
 // Initial state
 const initialState = {
 	// Config and UI model

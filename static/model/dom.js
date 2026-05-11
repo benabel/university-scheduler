@@ -2,10 +2,10 @@
 
 // DOM element references
 const dom = {
-	// Main container
+	// Main panel
 	app: null,
 
-	// View containers
+	// View panels
 	viewPanels: {},
 	viewTimelines: {},
 	customTimelines: {},

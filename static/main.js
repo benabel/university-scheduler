@@ -7,17 +7,7 @@ import {
 } from "./controllers/render.js";
 
 import { initUI } from "./controllers/ui.js";
-import { state, TIMELINE_TONES } from "./model/state.js";
-
-// Global toneForKey function (needed by views)
-window.toneForKey = (key) => {
-	const text = String(key || "");
-	let hash = 0;
-	for (let index = 0; index < text.length; index += 1) {
-		hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
-	}
-	return TIMELINE_TONES[hash % TIMELINE_TONES.length];
-};
+import { state } from "./model/state.js";
 
 // Global entityLabel function (needed by views)
 window.entityLabel = (entity, fallback) => {

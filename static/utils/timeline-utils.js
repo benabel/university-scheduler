@@ -1,26 +1,8 @@
 /* timeline-utils.js — Utility functions for timeline rendering */
 
-import { SLOT_MINUTES } from "../model/state.js";
+import { SLOT_MINUTES, DAY_MAP, WEEKDAYS } from "./constants.js";
 
-// Mapping jours de la semaine
-export const DAY_MAP = {
-	Mon: 0,
-	Tue: 1,
-	Wed: 2,
-	Thu: 3,
-	Fri: 4,
-	Sat: 5,
-	Sun: 6,
-};
-export const WEEKDAYS = [
-	"Monday",
-	"Tuesday",
-	"Wednesday",
-	"Thursday",
-	"Friday",
-	"Saturday",
-	"Sunday",
-];
+
 
 // Parse une heure au format "HH:MM:SS" ou "HH:MM" en minutes depuis minuit
 export function parseTimeToMinutes(timeStr) {

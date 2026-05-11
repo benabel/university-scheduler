@@ -119,8 +119,8 @@ export function initUI() {
 		className: "sf-content",
 		style: { display: "none" },
 	});
-	const tablesContainer = SF.el("div", { id: "sf-tables" });
-	dataPanel.appendChild(tablesContainer);
+	const dataContainer = SF.el("div", { id: "sf-tables" });
+	dataPanel.appendChild(dataContainer);
 	app.appendChild(dataPanel);
 
 	// Create API panel
@@ -128,8 +128,8 @@ export function initUI() {
 		className: "sf-content",
 		style: { display: "none" },
 	});
-	const apiGuideContainer = SF.el("div", { id: "sf-api-guide" });
-	apiPanel.appendChild(apiGuideContainer);
+	const apiGuidePanel = SF.el("div", { id: "sf-api-guide" });
+	apiPanel.appendChild(apiGuidePanel);
 	app.appendChild(apiPanel);
 
 	// Create custom view panels

@@ -4,7 +4,6 @@
  * Shared constants used across the application
  */
 
-// Time constants
 export const SLOT_MINUTES = 60;
 export const DEFAULT_VIEWPORT_SLOTS = 12;
 
@@ -17,6 +16,7 @@ export const TIMELINE_TONES = [
 	"violet",
 	"slate",
 ];
+
 
 // Day mapping
 export const DAY_MAP = {

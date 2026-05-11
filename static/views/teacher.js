@@ -10,7 +10,7 @@ import {
 
 export function renderByTeacher(
 	data,
-	container,
+	panel,
 	SF,
 	toneForKey,
 	customTimelinesRef = null,
@@ -22,7 +22,7 @@ export function renderByTeacher(
 	const groups = data.groups || [];
 
 	if (!lessons.length) {
-		container.innerHTML = "<p>No lessons available.</p>";
+		panel.innerHTML = "<p>No lessons available.</p>";
 		return;
 	}
 
@@ -106,17 +106,17 @@ export function renderByTeacher(
 		model: { axis: axis, lanes: lanes },
 	});
 
-	container.innerHTML = "";
+	panel.innerHTML = "";
 	const realTeacherCount = Object.keys(byTeacher).filter(
 		(key) => key !== "Unassigned",
 	).length;
-	container.appendChild(
+	panel.appendChild(
 		SF.createTable({
 			columns: ["Total Teachers", "Total Lessons"],
 			rows: [[String(realTeacherCount), String(lessons.length)]],
 		}),
 	);
-	container.appendChild(timeline.el);
+	panel.appendChild(timeline.el);
 
 	// Update dom if using dom-managed timelines
 	if (!customTimelinesRef) {
