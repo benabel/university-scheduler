@@ -22,7 +22,7 @@ export function initUI() {
 	const app = document.querySelector("#sf-app");
 	dom.app = app;
 
-	const config = state.get("config");
+	const config = state.get("sfConfig");
 	const uiModel = state.get("uiModel");
 
 	const statusBar = SF.createStatusBar({
@@ -46,7 +46,7 @@ export function initUI() {
 	// Create header
 	const header = SF.createHeader({
 		logo: "/sf/img/ouroboros.svg",
-		title: config?.title || "University Scheduler",
+		title: config?.title || "TODO No title provided in config",
 		subtitle: config?.subtitle || "",
 		tabs: tabs,
 		actions: {
@@ -108,22 +108,8 @@ export function initUI() {
 	app.appendChild(overviewPanel);
 	dom.overviewPanel = overviewContainer;
 
-	// Create view panels from uiModel
+	// Create view panels
 	const viewPanels = {};
-	const viewContainers = {};
-	(uiModel?.views || []).forEach((view) => {
-		const panel = SF.el("div", {
-			className: "sf-content",
-			style: { display: state.get("activeTab") === view.id ? "" : "none" },
-		});
-		const container = SF.el("div", { id: `view-${view.id}` });
-		panel.appendChild(container);
-		viewPanels[view.id] = panel;
-		viewContainers[view.id] = container;
-		app.appendChild(panel);
-	});
-	dom.viewContainers = viewContainers;
-	dom.viewPanels = viewPanels;
 
 	// Create data panel
 	const dataPanel = SF.el("div", {
@@ -140,10 +126,13 @@ export function initUI() {
 		className: "sf-content",
 		style: { display: "none" },
 	});
-	const apiGuidePanel = SF.el("div", { id: "sf-api-guide" });
+	const apiGuidePanel = SF.el("div", { id: "sf-api-guide", style: "display: flex; align-items: center;  justify-content: center;" });
+	dom.apiGuidePanel = apiGuidePanel;
+
 	apiPanel.appendChild(apiGuidePanel);
 	app.appendChild(apiPanel);
-	renderApiGuide(apiGuidePanel,)
+	const defaultDemoId = state.get('sfConfig').defaultDemoId
+	renderApiGuide(apiGuidePanel, defaultDemoId)
 
 	// Create custom view panels
 	const byGroupPanel = SF.el("div", {
@@ -178,7 +167,7 @@ export function initUI() {
 
 	// Set all view panels in dom
 	dom.viewPanels = {
-		...viewPanels,
+		// ...viewPanels,
 		"by-group": byGroupPanel,
 		"by-room": byRoomPanel,
 		"by-teacher": byTeacherPanel,
@@ -233,6 +222,7 @@ export function initUI() {
 // Handle tab change
 export function handleTabChange(tab) {
 	const viewPanels = dom.viewPanels;
+	console.log(viewPanels)
 
 	// Hide all panels
 	Object.keys(viewPanels).forEach((key) => {

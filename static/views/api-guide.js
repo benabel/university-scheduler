@@ -5,21 +5,16 @@
  * Does not read state directly
  */
 
-import { dom } from "../model/dom.js";
 
 /**
  * Render the API guide panel
   */
-export function renderApiGuide(demoCatalog) {
-	const apiGuidePanel = dom.apiGuidePanel;
+export function renderApiGuide(apiGuidePanel, defaultId) {
+
 	if (!apiGuidePanel) return;
 
 	apiGuidePanel.innerHTML = "";
-
-	const defaultDemoPath = demoCatalog?.defaultId
-		? `/demo-data/${demoCatalog.defaultId}`
-		: "/demo-data/{defaultId}";
-
+	const defaultDemoPath = `/demo-data/${defaultId}`;
 	const endpoints = [
 		{
 			method: "GET",

@@ -29,17 +29,17 @@ mod assemble {
     pub fn create_constraints() -> impl ConstraintSet<Plan, HardMediumSoftScore> {
         // @solverforge:begin constraint-calls
         (
-            assign_timeslot::constraint(),
             assign_room::constraint(),
-            teacher_availability::constraint(),
+            assign_timeslot::constraint(),
             group_availability::constraint(),
-            room_kind::constraint(),
-            room_capacity::constraint(),
-            no_group_conflict::constraint(),
-            no_teacher_conflict::constraint(),
-            no_room_conflict::constraint(),
             late_lesson::constraint(),
+            no_group_conflict::constraint(),
+            no_room_conflict::constraint(),
+            no_teacher_conflict::constraint(),
             repeated_subject_day::constraint(),
+            room_capacity::constraint(),
+            room_kind::constraint(),
+            teacher_availability::constraint(),
         )
         // @solverforge:end constraint-calls
     }

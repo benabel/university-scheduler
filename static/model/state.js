@@ -5,7 +5,7 @@ import { requestJson } from "../services/api.js";
 // Initial state
 const initialState = {
 	// Config and UI model
-	config: null,
+	sfConfig: null,
 	uiModel: null,
 
 	// UI objects
@@ -16,7 +16,6 @@ const initialState = {
 	currentPlan: null,
 	lastAnalysis: null,
 	bootstrapError: null,
-	demoCatalog: { defaultId: null, availableIds: [] },
 	activeTab: "overview",
 
 	// Solver state
@@ -35,7 +34,7 @@ class AppState {
 
 	async init() {
 		this.set("backend", SF.createBackend({ baseUrl: "" }));
-		this.set("config", await requestJson("/sf-config.json", "config"));
+		this.set("sfConfig", await requestJson("/sf-config.json", "sfConfig"));
 		this.set("uiModel", await requestJson("/generated/ui-model.json", "UI model"));
 	}
 

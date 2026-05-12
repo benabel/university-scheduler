@@ -10,9 +10,7 @@ ui_source = "crates.io: solverforge-ui 0.6.5"
 
 [demo]
 default_size = "LARGE"
-available_sizes = [
-    "LARGE",
-]
+available_sizes = ["LARGE"]
 
 [solution]
 name = "Plan"
@@ -64,18 +62,13 @@ allows_unassigned = false
 enabled = true
 
 [[constraints]]
-name = "assign_timeslot"
-module = "assign_timeslot"
-enabled = true
-
-[[constraints]]
 name = "assign_room"
 module = "assign_room"
 enabled = true
 
 [[constraints]]
-name = "teacher_availability"
-module = "teacher_availability"
+name = "assign_timeslot"
+module = "assign_timeslot"
 enabled = true
 
 [[constraints]]
@@ -84,18 +77,18 @@ module = "group_availability"
 enabled = true
 
 [[constraints]]
-name = "room_kind"
-module = "room_kind"
-enabled = true
-
-[[constraints]]
-name = "room_capacity"
-module = "room_capacity"
+name = "late_lesson"
+module = "late_lesson"
 enabled = true
 
 [[constraints]]
 name = "no_group_conflict"
 module = "no_group_conflict"
+enabled = true
+
+[[constraints]]
+name = "no_overlap"
+module = "no_overlap"
 enabled = true
 
 [[constraints]]
@@ -109,11 +102,21 @@ module = "no_teacher_conflict"
 enabled = true
 
 [[constraints]]
-name = "late_lesson"
-module = "late_lesson"
+name = "repeated_subject_day"
+module = "repeated_subject_day"
 enabled = true
 
 [[constraints]]
-name = "repeated_subject_day"
-module = "repeated_subject_day"
+name = "room_capacity"
+module = "room_capacity"
+enabled = true
+
+[[constraints]]
+name = "room_kind"
+module = "room_kind"
+enabled = true
+
+[[constraints]]
+name = "teacher_availability"
+module = "teacher_availability"
 enabled = true
