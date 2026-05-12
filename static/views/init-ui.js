@@ -187,15 +187,9 @@ export function initUI() {
 	window.addEventListener("beforeunload", () => {
 		const solver = state.get("solver");
 		if (solver) {
-			const viewTimelines = dom.viewTimelines || {};
 			const customTimelines = dom.customTimelines || {};
 
-			// Destroy all timelines
-			Object.keys(viewTimelines).forEach((viewId) => {
-				if (viewTimelines[viewId]) {
-					viewTimelines[viewId].destroy();
-				}
-			});
+			// Destroy all custom timelines
 			Object.keys(customTimelines).forEach((key) => {
 				if (customTimelines[key]) {
 					customTimelines[key].destroy();

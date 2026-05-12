@@ -9,6 +9,8 @@ const dom = {
 	overviewPanel: null,
 	tablesPanel: null,
 	apiGuidePanel: null,
+
+	// timelinePanels
 	byGroupPanel: null,
 	byRoomPanel: null,
 	byTeacherPanel: null,
@@ -17,8 +19,7 @@ const dom = {
 	bootstrapNotice: null,
 	analysisModal: null,
 
-	// View panels (parent containers)
-	viewTimelines: {},
+	// Timelines
 	customTimelines: {},
 };
 

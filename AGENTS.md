@@ -116,7 +116,7 @@ The application now uses `HardMediumSoftScore` with three score levels:
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **university-scheduler** (995 symbols, 1967 relationships, 85 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **university-scheduler** (987 symbols, 1919 relationships, 84 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
