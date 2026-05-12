@@ -108,9 +108,6 @@ export function initUI() {
 	app.appendChild(overviewPanel);
 	dom.overviewPanel = overviewContainer;
 
-	// Create view panels
-	const viewPanels = {};
-
 	// Create data panel
 	const dataPanel = SF.el("div", {
 		className: "sf-content",
@@ -142,8 +139,7 @@ export function initUI() {
 	const byGroupContainer = SF.el("div", { id: "sf-by-group" });
 	byGroupPanel.appendChild(byGroupContainer);
 	app.appendChild(byGroupPanel);
-	viewPanels["by-group"] = byGroupPanel;
-	dom.byGroupPanel = byGroupContainer;
+	dom.byGroupPanel = byGroupPanel;
 
 	const byRoomPanel = SF.el("div", {
 		className: "sf-content",
@@ -152,8 +148,7 @@ export function initUI() {
 	const byRoomContainer = SF.el("div", { id: "sf-by-room" });
 	byRoomPanel.appendChild(byRoomContainer);
 	app.appendChild(byRoomPanel);
-	viewPanels["by-room"] = byRoomPanel;
-	dom.byRoomPanel = byRoomContainer;
+	dom.byRoomPanel = byRoomPanel;
 
 	const byTeacherPanel = SF.el("div", {
 		className: "sf-content",
@@ -162,16 +157,7 @@ export function initUI() {
 	const byTeacherContainer = SF.el("div", { id: "sf-by-teacher" });
 	byTeacherPanel.appendChild(byTeacherContainer);
 	app.appendChild(byTeacherPanel);
-	viewPanels["by-teacher"] = byTeacherPanel;
-	dom.byTeacherPanel = byTeacherContainer;
-
-	// Set all view panels in dom
-	dom.viewPanels = {
-		// ...viewPanels,
-		"by-group": byGroupPanel,
-		"by-room": byRoomPanel,
-		"by-teacher": byTeacherPanel,
-	};
+	dom.byTeacherPanel = byTeacherPanel;
 
 	// Create footer
 	app.appendChild(
@@ -221,23 +207,13 @@ export function initUI() {
 
 // Handle tab change
 export function handleTabChange(tab) {
-	const viewPanels = dom.viewPanels;
-	console.log(viewPanels)
-
-	// Hide all panels
-	Object.keys(viewPanels).forEach((key) => {
-		if (viewPanels[key]?.style) {
-			viewPanels[key].style.display = key === tab ? "" : "none";
-		}
-	});
-
 	// Show/hide specific panels using dom references
 	const overviewParent = dom.overviewPanel?.parentElement;
 	const tablesParent = dom.tablesPanel?.parentElement;
 	const apiGuideParent = dom.apiGuidePanel?.parentElement;
-	const byGroupPanel = viewPanels["by-group"];
-	const byRoomPanel = viewPanels["by-room"];
-	const byTeacherPanel = viewPanels["by-teacher"];
+	const byGroupPanel = dom.byGroupPanel;
+	const byRoomPanel = dom.byRoomPanel;
+	const byTeacherPanel = dom.byTeacherPanel;
 
 	if (overviewParent)
 		overviewParent.style.display = tab === "overview" ? "" : "none";

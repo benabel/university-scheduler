@@ -84,10 +84,9 @@ export function renderOverview(data) {
 		);
 		overviewPanel.appendChild(
 			SF.createTable({
-				columns: ["Active views", "Constraints", "Current score"],
+				columns: ["Constraints", "Current score"],
 				rows: [
 					[
-						String(uiModel.views.length),
 						String((uiModel.constraints || []).length),
 						String(data.score || "—"),
 					],
