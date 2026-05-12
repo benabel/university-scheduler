@@ -94,13 +94,13 @@ export async function bootstrapDemoData() {
 // Clear bootstrap error
 export function clearBootstrapError() {
 	state.set("bootstrapError", null);
+	const bootstrapNotice = dom.bootstrapNotice;
+	if (bootstrapNotice) {
+		bootstrapNotice.textContent = "";
+		bootstrapNotice.style.display = "none";
+	}
 	const app = dom.app;
 	if (app) {
-		const bootstrapNotice = app.querySelector(".bootstrap-notice");
-		if (bootstrapNotice) {
-			bootstrapNotice.textContent = "";
-			bootstrapNotice.style.display = "none";
-		}
 		delete app.dataset.bootstrapError;
 	}
 }
@@ -110,13 +110,13 @@ export function reportBootstrapError(err) {
 	const errorMessage = describeError(err);
 	state.set("bootstrapError", errorMessage);
 
+	const bootstrapNotice = dom.bootstrapNotice;
+	if (bootstrapNotice) {
+		bootstrapNotice.textContent = `Demo data bootstrap failed: ${errorMessage}`;
+		bootstrapNotice.style.display = "";
+	}
 	const app = dom.app;
 	if (app) {
-		const bootstrapNotice = app.querySelector(".bootstrap-notice");
-		if (bootstrapNotice) {
-			bootstrapNotice.textContent = `Demo data bootstrap failed: ${errorMessage}`;
-			bootstrapNotice.style.display = "";
-		}
 		app.dataset.bootstrapError = "true";
 	}
 	console.error("Demo data bootstrap failed:", err);

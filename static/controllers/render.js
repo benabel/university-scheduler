@@ -30,9 +30,9 @@ export function renderAll(data) {
 	renderTables(data);
 
 	// Get panels from dom
-	const byGroupPanel = document.querySelector("#sf-by-group");
-	const byRoomPanel = document.querySelector("#sf-by-room");
-	const byTeacherPanel = document.querySelector("#sf-by-teacher");
+	const byGroupPanel = dom.byGroupPanel;
+	const byRoomPanel = dom.byRoomPanel;
+	const byTeacherPanel = dom.byTeacherPanel;
 
 	// Custom timelines from dom
 	const customTimelines = dom.customTimelines || {};
@@ -69,7 +69,7 @@ export function renderAll(data) {
 // Render overview
 export function renderOverview(data) {
 	const uiModel = state.get("uiModel");
-	const overviewPanel = document.querySelector("#sf-overview");
+	const overviewPanel = dom.overviewPanel;
 
 	if (!overviewPanel) return;
 
@@ -108,9 +108,10 @@ export function renderOverview(data) {
 // Render standard views
 export function renderViews(data) {
 	const uiModel = state.get("uiModel");
+	const viewContainers = dom.viewContainers || {};
 
 	(uiModel?.views || []).forEach((view) => {
-		const panel = document.getElementById(`view-${view.id}`);
+		const panel = viewContainers[view.id];
 		if (!panel) return;
 		if (view.kind === "list") {
 			renderTimelinePanel(
@@ -380,7 +381,7 @@ export function buildListViewPayload(data, view) {
 // Render tables
 export function renderTables(data) {
 	const uiModel = state.get("uiModel");
-	const tablesPanel = document.querySelector("#sf-tables");
+	const tablesPanel = dom.tablesPanel;
 
 	if (!tablesPanel) return;
 

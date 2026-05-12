@@ -5,11 +5,13 @@
  * Does not read state directly
  */
 
+import { dom } from "../model/dom.js";
+
 /**
  * Render the API guide panel
   */
 export function renderApiGuide(demoCatalog) {
-	const apiGuidePanel = document.querySelector("#sf-api-guide");
+	const apiGuidePanel = dom.apiGuidePanel;
 	if (!apiGuidePanel) return;
 
 	apiGuidePanel.innerHTML = "";

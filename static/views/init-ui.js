@@ -93,6 +93,7 @@ export function initUI() {
 		},
 	});
 	app.appendChild(bootstrapNotice);
+	dom.bootstrapNotice = bootstrapNotice;
 
 	// Create overview panel
 	const overviewPanel = SF.el("div", {
@@ -102,18 +103,23 @@ export function initUI() {
 	const overviewContainer = SF.el("div", { id: "sf-overview" });
 	overviewPanel.appendChild(overviewContainer);
 	app.appendChild(overviewPanel);
+	dom.overviewPanel = overviewContainer;
 
 	// Create view panels from uiModel
 	const viewPanels = {};
+	const viewContainers = {};
 	(uiModel?.views || []).forEach((view) => {
 		const panel = SF.el("div", {
 			className: "sf-content",
 			style: { display: state.get("activeTab") === view.id ? "" : "none" },
 		});
-		panel.appendChild(SF.el("div", { id: `view-${view.id}` }));
+		const container = SF.el("div", { id: `view-${view.id}` });
+		panel.appendChild(container);
 		viewPanels[view.id] = panel;
+		viewContainers[view.id] = container;
 		app.appendChild(panel);
 	});
+	dom.viewContainers = viewContainers;
 	dom.viewPanels = viewPanels;
 
 	// Create data panel
@@ -124,6 +130,7 @@ export function initUI() {
 	const dataContainer = SF.el("div", { id: "sf-tables" });
 	dataPanel.appendChild(dataContainer);
 	app.appendChild(dataPanel);
+	dom.tablesPanel = dataContainer;
 
 	// Create API panel
 	const apiPanel = SF.el("div", {
@@ -133,6 +140,7 @@ export function initUI() {
 	const apiGuidePanel = SF.el("div", { id: "sf-api-guide" });
 	apiPanel.appendChild(apiGuidePanel);
 	app.appendChild(apiPanel);
+	dom.apiGuidePanel = apiGuidePanel;
 
 	// Create custom view panels
 	const byGroupPanel = SF.el("div", {
@@ -143,6 +151,7 @@ export function initUI() {
 	byGroupPanel.appendChild(byGroupContainer);
 	app.appendChild(byGroupPanel);
 	viewPanels["by-group"] = byGroupPanel;
+	dom.byGroupPanel = byGroupContainer;
 
 	const byRoomPanel = SF.el("div", {
 		className: "sf-content",
@@ -152,6 +161,7 @@ export function initUI() {
 	byRoomPanel.appendChild(byRoomContainer);
 	app.appendChild(byRoomPanel);
 	viewPanels["by-room"] = byRoomPanel;
+	dom.byRoomPanel = byRoomContainer;
 
 	const byTeacherPanel = SF.el("div", {
 		className: "sf-content",
@@ -161,6 +171,7 @@ export function initUI() {
 	byTeacherPanel.appendChild(byTeacherContainer);
 	app.appendChild(byTeacherPanel);
 	viewPanels["by-teacher"] = byTeacherPanel;
+	dom.byTeacherPanel = byTeacherContainer;
 
 	// Set all view panels in dom
 	dom.viewPanels = {
@@ -219,7 +230,6 @@ export function initUI() {
 // Handle tab change
 export function handleTabChange(tab) {
 	const viewPanels = dom.viewPanels;
-	const _activeTab = state.get("activeTab");
 
 	// Hide all panels
 	Object.keys(viewPanels).forEach((key) => {
@@ -228,18 +238,19 @@ export function handleTabChange(tab) {
 		}
 	});
 
-	// Show/hide specific panels
-	const overviewPanel = document.querySelector("#sf-overview")?.parentElement;
-	const dataPanel = document.querySelector("#sf-tables")?.parentElement;
-	const apiPanel = document.querySelector("#sf-api-guide")?.parentElement;
+	// Show/hide specific panels using dom references
+	const overviewParent = dom.overviewPanel?.parentElement;
+	const tablesParent = dom.tablesPanel?.parentElement;
+	const apiGuideParent = dom.apiGuidePanel?.parentElement;
 	const byGroupPanel = viewPanels["by-group"];
 	const byRoomPanel = viewPanels["by-room"];
 	const byTeacherPanel = viewPanels["by-teacher"];
 
-	if (overviewPanel)
-		overviewPanel.style.display = tab === "overview" ? "" : "none";
-	if (dataPanel) dataPanel.style.display = tab === "data" ? "" : "none";
-	if (apiPanel) apiPanel.style.display = tab === "api" ? "" : "none";
+	if (overviewParent)
+		overviewParent.style.display = tab === "overview" ? "" : "none";
+	if (tablesParent) tablesParent.style.display = tab === "data" ? "" : "none";
+	if (apiGuideParent)
+		apiGuideParent.style.display = tab === "api" ? "" : "none";
 	if (byGroupPanel)
 		byGroupPanel.style.display = tab === "by-group" ? "" : "none";
 	if (byRoomPanel) byRoomPanel.style.display = tab === "by-room" ? "" : "none";

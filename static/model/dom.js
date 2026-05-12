@@ -5,7 +5,19 @@ const dom = {
 	// Main panel
 	app: null,
 
-	// View panels
+	// Content containers
+	overviewPanel: null,
+	tablesPanel: null,
+	apiGuidePanel: null,
+	byGroupPanel: null,
+	byRoomPanel: null,
+	byTeacherPanel: null,
+	bootstrapNotice: null,
+
+	// View containers (individual view divs)
+	viewContainers: {},
+
+	// View panels (parent containers)
 	viewPanels: {},
 	viewTimelines: {},
 	customTimelines: {},
