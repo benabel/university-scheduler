@@ -35,7 +35,10 @@ class AppState {
 	async init() {
 		this.set("backend", SF.createBackend({ baseUrl: "" }));
 		this.set("sfConfig", await requestJson("/sf-config.json", "sfConfig"));
-		this.set("uiModel", await requestJson("/generated/ui-model.json", "UI model"));
+		this.set(
+			"uiModel",
+			await requestJson("/generated/ui-model.json", "UI model"),
+		);
 	}
 
 	getState() {

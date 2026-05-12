@@ -2,7 +2,11 @@
 
 import { dom } from "../model/dom.js";
 import { state } from "../model/state.js";
-import { TIMELINE_TONES, SLOT_MINUTES, DEFAULT_VIEWPORT_SLOTS } from "../utils/constants.js";
+import {
+	DEFAULT_VIEWPORT_SLOTS,
+	SLOT_MINUTES,
+	TIMELINE_TONES,
+} from "../utils/constants.js";
 import {
 	renderByGroup,
 	renderByRoom,
@@ -26,7 +30,6 @@ export function renderAll(data) {
 	state.set("currentPlan", currentPlan);
 
 	renderOverview(data);
-	renderViews(data);
 	renderTables(data);
 
 	// Get panels from dom
@@ -45,14 +48,7 @@ export function renderAll(data) {
 		entityLabel,
 		customTimelines,
 	);
-	renderByRoom(
-		data,
-		byRoomPanel,
-		SF,
-		toneForKey,
-		entityLabel,
-		customTimelines,
-	);
+	renderByRoom(data, byRoomPanel, SF, toneForKey, entityLabel, customTimelines);
 	renderByTeacher(
 		data,
 		byTeacherPanel,
@@ -104,32 +100,6 @@ export function renderOverview(data) {
 	);
 }
 
-// Render standard views
-export function renderViews(data) {
-	const uiModel = state.get("uiModel");
-	const viewContainers = dom.viewContainers || {};
-
-	(uiModel?.views || []).forEach((view) => {
-		const panel = viewContainers[view.id];
-		if (!panel) return;
-		if (view.kind === "list") {
-			renderTimelinePanel(
-				panel,
-				view.id,
-				buildListViewPayload(data, view),
-				"This list-variable timeline will appear once the referenced facts and entities contain data.",
-			);
-		} else {
-			renderTimelinePanel(
-				panel,
-				view.id,
-				buildScalarViewPayload(data, view),
-				"This scalar-variable timeline will appear once the referenced facts and entities contain data.",
-			);
-		}
-	});
-}
-
 // Render timeline panel
 export function renderTimelinePanel(panel, viewId, payload, emptyMessage) {
 	const viewTimelines = dom.viewTimelines;
@@ -142,9 +112,7 @@ export function renderTimelinePanel(panel, viewId, payload, emptyMessage) {
 	}
 
 	panel.appendChild(payload.summary);
-	panel.appendChild(
-		ensureTimeline(viewId, payload.timeline, viewTimelines).el,
-	);
+	panel.appendChild(ensureTimeline(viewId, payload.timeline, viewTimelines).el);
 }
 
 // Ensure timeline
@@ -507,8 +475,6 @@ export function listLaneBadges(length, longestSequence) {
 	if (length === 1) badges.push("Single");
 	return badges;
 }
-
-
 
 // Entity label
 export function entityLabel(entity, fallback) {

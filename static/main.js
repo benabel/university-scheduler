@@ -5,9 +5,8 @@ import {
 	renderAll,
 	updateSolveActionAvailability,
 } from "./controllers/render.js";
-
-import { initUI } from "./views/init-ui.js";
 import { state } from "./model/state.js";
+import { initUI } from "./views/init-ui.js";
 
 // Global entityLabel function (needed by views)
 window.entityLabel = (entity, fallback) => {

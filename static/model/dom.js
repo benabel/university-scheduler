@@ -17,9 +17,6 @@ const dom = {
 	bootstrapNotice: null,
 	analysisModal: null,
 
-	// View containers (individual view divs)
-	viewContainers: {},
-
 	// View panels (parent containers)
 	viewTimelines: {},
 	customTimelines: {},

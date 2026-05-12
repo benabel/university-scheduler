@@ -17,7 +17,6 @@ export const TIMELINE_TONES = [
 	"slate",
 ];
 
-
 // Day mapping
 export const DAY_MAP = {
 	Mon: 0,
@@ -39,7 +38,7 @@ export const WEEKDAYS = [
 	"Sunday",
 ];
 
-// TODO: open issue upstream -- these should be generated from the solver model 
+// TODO: open issue upstream -- these should be generated from the solver model
 // Constraint levels mapping
 export const CONSTRAINT_LEVELS = new Map([
 	["Assign Timeslot", "medium"],

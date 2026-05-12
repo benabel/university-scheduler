@@ -1,8 +1,6 @@
 /* timeline-utils.js — Utility functions for timeline rendering */
 
-import { SLOT_MINUTES, DAY_MAP, WEEKDAYS } from "./constants.js";
-
-
+import { DAY_MAP, SLOT_MINUTES, WEEKDAYS } from "./constants.js";
 
 // Parse une heure au format "HH:MM:SS" ou "HH:MM" en minutes depuis minuit
 export function parseTimeToMinutes(timeStr) {

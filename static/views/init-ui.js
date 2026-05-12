@@ -1,13 +1,6 @@
 /* ui.js — Manages UI initialization and tab switching */
 
-import { dom } from "../model/dom.js";
-import { state } from "../model/state.js";
-import {
-	updateSolveActionAvailability,
-} from "../controllers/render.js";
-
-import { renderApiGuide } from "./api-guide.js";
-import { showAnalysis } from "./analysis-modal.js";
+import { updateSolveActionAvailability } from "../controllers/render.js";
 import {
 	cancelSolve,
 	getAnalysis,
@@ -16,6 +9,10 @@ import {
 	pauseSolve,
 	resumeSolve,
 } from "../controllers/solver.js";
+import { dom } from "../model/dom.js";
+import { state } from "../model/state.js";
+import { showAnalysis } from "./analysis-modal.js";
+import { renderApiGuide } from "./api-guide.js";
 
 // Initialize the UI
 export function initUI() {
@@ -123,13 +120,16 @@ export function initUI() {
 		className: "sf-content",
 		style: { display: "none" },
 	});
-	const apiGuidePanel = SF.el("div", { id: "sf-api-guide", style: "display: flex; align-items: center;  justify-content: center;" });
+	const apiGuidePanel = SF.el("div", {
+		id: "sf-api-guide",
+		style: "display: flex; align-items: center;  justify-content: center;",
+	});
 	dom.apiGuidePanel = apiGuidePanel;
 
 	apiPanel.appendChild(apiGuidePanel);
 	app.appendChild(apiPanel);
-	const defaultDemoId = state.get('sfConfig').defaultDemoId
-	renderApiGuide(apiGuidePanel, defaultDemoId)
+	const defaultDemoId = state.get("sfConfig").defaultDemoId;
+	renderApiGuide(apiGuidePanel, defaultDemoId);
 
 	// Create custom view panels
 	const byGroupPanel = SF.el("div", {

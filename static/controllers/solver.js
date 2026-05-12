@@ -128,8 +128,6 @@ export function cancelSolve() {
 		});
 }
 
-
-
 // Resolve plan for solving
 export function resolvePlanForSolve() {
 	const currentPlan = state.get("currentPlan");
@@ -206,4 +204,3 @@ export async function getAnalysis() {
 	if (!solver.getJobId()) return null;
 	return await solver.analyzeSnapshot();
 }
-

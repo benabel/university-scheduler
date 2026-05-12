@@ -5,12 +5,10 @@
  * Does not read state directly
  */
 
-
 /**
  * Render the API guide panel
-  */
+ */
 export function renderApiGuide(apiGuidePanel, defaultId) {
-
 	if (!apiGuidePanel) return;
 
 	apiGuidePanel.innerHTML = "";
