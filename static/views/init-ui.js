@@ -7,12 +7,12 @@ import {
 } from "../controllers/render.js";
 
 import { renderApiGuide } from "./api-guide.js";
-
+import { showAnalysis } from "./analysis-modal.js";
 import {
 	cancelSolve,
+	getAnalysis,
 	initSolver,
 	loadAndSolve,
-	openAnalysis,
 	pauseSolve,
 	resumeSolve,
 } from "../controllers/solver.js";
@@ -62,9 +62,12 @@ export function initUI() {
 			onCancel: () => {
 				cancelSolve();
 			},
-			onAnalyze: () => {
-				const analysisModal = state.get("analysisModal");
-				openAnalysis(analysisModal);
+			onAnalyze: async () => {
+				const analysis = await getAnalysis();
+				if (analysis) {
+					state.set("lastAnalysis", analysis);
+					showAnalysis(analysis);
+				}
 			},
 		},
 		onTabChange: (tab) => {
@@ -196,7 +199,7 @@ export function initUI() {
 		title: "Score Analysis",
 		width: "700px",
 	});
-	state.set("analysisModal", analysisModal);
+	dom.analysisModal = analysisModal;
 
 	// Initialize solver
 	initSolver(state.get("backend"), statusBar);

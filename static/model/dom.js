@@ -13,6 +13,7 @@ const dom = {
 	byRoomPanel: null,
 	byTeacherPanel: null,
 	bootstrapNotice: null,
+	analysisModal: null,
 
 	// View containers (individual view divs)
 	viewContainers: {},

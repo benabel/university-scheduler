@@ -11,7 +11,6 @@ const initialState = {
 	// UI objects
 	header: null,
 	statusBar: null,
-	analysisModal: null,
 
 	// Data state
 	currentPlan: null,
@@ -35,12 +34,9 @@ class AppState {
 	}
 
 	async init() {
-		this.state.backend = SF.createBackend({ baseUrl: "" });
-		this.state.config = await requestJson("/sf-config.json", "config");
-		this.state.uiModel = await requestJson(
-			"/generated/ui-model.json",
-			"UI model",
-		);
+		this.set("backend", SF.createBackend({ baseUrl: "" }));
+		this.set("config", await requestJson("/sf-config.json", "config"));
+		this.set("uiModel", await requestJson("/generated/ui-model.json", "UI model"));
 	}
 
 	getState() {

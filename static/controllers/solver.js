@@ -128,19 +128,7 @@ export function cancelSolve() {
 		});
 }
 
-export async function openAnalysis(analysisModal) {
-	const solver = state.get("solver");
-	if (!solver.getJobId()) return;
 
-	try {
-		const analysis = await solver.analyzeSnapshot();
-		state.set("lastAnalysis", analysis);
-		analysisModal.setBody(buildAnalysisHtml(analysis));
-		analysisModal.open();
-	} catch (error) {
-		console.error("Analysis failed:", error);
-	}
-}
 
 // Resolve plan for solving
 export function resolvePlanForSolve() {
@@ -212,31 +200,10 @@ export function syncLifecycleMarkers(meta) {
 	}
 }
 
-// Build analysis HTML
-export function buildAnalysisHtml(analysis) {
-	if (!analysis || !analysis.constraints)
-		return "<p>No analysis available.</p>";
-	let html = `<p><strong>Score:</strong> ${SF.escHtml(analysis.score)}</p>`;
-	html +=
-		'<table class="sf-table"><thead><tr><th>Constraint</th><th>Type</th><th>Score</th><th>Matches</th></tr></thead><tbody>';
-	analysis.constraints.forEach((constraint) => {
-		const matchCount =
-			constraint.matchCount != null
-				? constraint.matchCount
-				: constraint.matches
-					? constraint.matches.length
-					: 0;
-		html +=
-			"<tr><td>" +
-			SF.escHtml(constraint.name) +
-			"</td><td>" +
-			SF.escHtml(constraint.constraintType || constraint.type || "") +
-			"</td><td>" +
-			SF.escHtml(constraint.score) +
-			"</td><td>" +
-			matchCount +
-			"</td></tr>";
-	});
-	html += "</tbody></table>";
-	return html;
+// Get current solver analysis snapshot
+export async function getAnalysis() {
+	const solver = state.get("solver");
+	if (!solver.getJobId()) return null;
+	return await solver.analyzeSnapshot();
 }
+
