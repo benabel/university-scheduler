@@ -143,7 +143,7 @@ export function initUI() {
 	const apiGuidePanel = SF.el("div", { id: "sf-api-guide" });
 	apiPanel.appendChild(apiGuidePanel);
 	app.appendChild(apiPanel);
-	dom.apiGuidePanel = apiGuidePanel;
+	renderApiGuide(apiGuidePanel,)
 
 	// Create custom view panels
 	const byGroupPanel = SF.el("div", {
