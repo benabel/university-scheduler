@@ -1,4 +1,5 @@
 import { dom } from "../model/dom.js";
+import { CONSTRAINT_LEVELS } from "../utils/constants.js";
 
 export function createAnalysisDiv(analysis) {
     const container = document.createElement('div');
@@ -42,9 +43,9 @@ export function createAnalysisDiv(analysis) {
             : constraint.matches?.length || 0;
 
         [constraint.name || '',
-         constraint.constraintType || constraint.type || '',
-         constraint.score || '',
-         String(matchCount)].forEach(value => {
+        CONSTRAINT_LEVELS.get(constraint.name) || constraint.constraintType || constraint.type || '',
+        constraint.score || '',
+        String(matchCount)].forEach(value => {
             const td = document.createElement('td');
             td.textContent = String(value);
             row.appendChild(td);
@@ -58,8 +59,8 @@ export function createAnalysisDiv(analysis) {
 }
 
 export function showAnalysis(analysis) {
-	const modal = dom.analysisModal;
-	if (!modal) return;
-	modal.setBody(createAnalysisDiv(analysis));
-	modal.open();
+    const modal = dom.analysisModal;
+    if (!modal) return;
+    modal.setBody(createAnalysisDiv(analysis));
+    modal.open();
 }
