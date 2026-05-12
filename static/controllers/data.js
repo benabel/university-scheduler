@@ -2,24 +2,13 @@
 
 import { dom } from "../model/dom.js";
 import { state } from "../model/state.js";
-
-// Fetch JSON helper
-export function requestJson(path, label) {
-	return fetch(path).then((response) => {
-		if (!response.ok) {
-			throw new Error(`${label} returned HTTP ${response.status}`);
-		}
-		return response.json();
-	});
-}
+import { requestJson } from "../services/api.js";
 
 // Load initial config and UI model
 export async function loadConfigAndUiModel() {
 	try {
-		const config = await fetch("/sf-config.json").then((r) => r.json());
-		const uiModel = await fetch("/generated/ui-model.json").then((r) =>
-			r.json(),
-		);
+		const config = await requestJson("/sf-config.json", "config");
+		const uiModel = await requestJson("/generated/ui-model.json", "ui model");
 
 		state.set("config", config);
 		state.set("uiModel", uiModel);
