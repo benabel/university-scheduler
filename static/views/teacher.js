@@ -26,8 +26,8 @@ export function renderByTeacher(
 		return;
 	}
 
-	// Use provided customTimelines or get from dom
-	const customTimelines = customTimelinesRef || dom.customTimelines;
+	// Use provided customTimelines
+	const customTimelines = customTimelinesRef || {};
 
 	// Créer une lane par teacher existant, même sans lessons
 	const byTeacher = {};
@@ -118,8 +118,5 @@ export function renderByTeacher(
 	);
 	panel.appendChild(timeline.el);
 
-	// Update dom if using dom-managed timelines
-	if (!customTimelinesRef) {
-		dom.customTimelines = customTimelines;
-	}
+
 }

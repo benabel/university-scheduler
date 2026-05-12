@@ -37,8 +37,8 @@ export function renderAll(data) {
 	const byRoomPanel = dom.byRoomPanel;
 	const byTeacherPanel = dom.byTeacherPanel;
 
-	// Custom timelines from dom
-	const customTimelines = dom.customTimelines || {};
+	// Custom timelines
+	const customTimelines = {};
 
 	renderByGroup(
 		data,
@@ -57,9 +57,6 @@ export function renderAll(data) {
 		entityLabel,
 		customTimelines,
 	);
-
-	// Update custom timelines in dom
-	dom.customTimelines = customTimelines;
 }
 
 // Render overview

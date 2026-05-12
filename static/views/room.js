@@ -25,8 +25,8 @@ export function renderByRoom(
 		return;
 	}
 
-	// Use provided customTimelines or get from dom
-	const customTimelines = customTimelinesRef || dom.customTimelines;
+	// Use provided customTimelines
+	const customTimelines = customTimelinesRef || {};
 
 	// Créer une lane par room existant, même sans lessons
 	const byRoom = {};
@@ -108,8 +108,5 @@ export function renderByRoom(
 	);
 	panel.appendChild(timeline.el);
 
-	// Update dom if using dom-managed timelines
-	if (!customTimelinesRef) {
-		dom.customTimelines = customTimelines;
-	}
+
 }

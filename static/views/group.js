@@ -25,8 +25,8 @@ export function renderByGroup(
 		return;
 	}
 
-	// Use provided customTimelines or get from dom
-	const customTimelines = customTimelinesRef || dom.customTimelines;
+	// Use provided customTimelines
+	const customTimelines = customTimelinesRef || {};
 
 	// Créer une lane par groupe existant, même sans lessons
 	const byGroup = {};
@@ -112,8 +112,5 @@ export function renderByGroup(
 	);
 	panel.appendChild(timeline.el);
 
-	// Update dom if using dom-managed timelines
-	if (!customTimelinesRef) {
-		dom.customTimelines = customTimelines;
-	}
+
 }

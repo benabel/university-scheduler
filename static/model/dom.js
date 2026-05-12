@@ -19,8 +19,7 @@ const dom = {
 	bootstrapNotice: null,
 	analysisModal: null,
 
-	// Timelines
-	customTimelines: {},
+
 };
 
 export { dom };
