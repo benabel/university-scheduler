@@ -30,7 +30,6 @@ export function renderAll(data) {
 	renderTables(data);
 
 	// Get panels from dom
-	const _viewPanels = dom.viewPanels;
 	const byGroupPanel = document.querySelector("#sf-by-group");
 	const byRoomPanel = document.querySelector("#sf-by-room");
 	const byTeacherPanel = document.querySelector("#sf-by-teacher");
@@ -406,94 +405,6 @@ export function renderTables(data) {
 		section.appendChild(SF.createTable({ columns: cols, rows: values }));
 		tablesPanel.appendChild(section);
 	});
-}
-
-// Render API guide
-export function renderApiGuide() {
-	const apiGuidePanel = document.querySelector("#sf-api-guide");
-	if (!apiGuidePanel) return;
-
-	apiGuidePanel.innerHTML = "";
-	const demoCatalog = state.get("demoCatalog");
-	const defaultDemoPath = demoCatalog?.defaultId
-		? `/demo-data/${demoCatalog.defaultId}`
-		: "/demo-data/{defaultId}";
-
-	const endpoints = [
-		{
-			method: "GET",
-			path: "/demo-data",
-			description: "Discover the default and available demo data IDs",
-			curl: buildCurlCommand("GET", "/demo-data"),
-		},
-		{
-			method: "GET",
-			path: defaultDemoPath,
-			description: "Fetch the discovered default demo data",
-			curl: buildCurlCommand("GET", defaultDemoPath),
-		},
-		{
-			method: "POST",
-			path: "/jobs",
-			description: "Create a retained solving job",
-			curl: buildCurlCommand("POST", "/jobs", {
-				json: true,
-				data: "@plan.json",
-			}),
-		},
-		{
-			method: "GET",
-			path: "/jobs/{id}",
-			description: "Get current job summary",
-			curl: buildCurlCommand("GET", "/jobs/{id}"),
-		},
-		{
-			method: "GET",
-			path: "/jobs/{id}/snapshot",
-			description: "Fetch the latest retained snapshot",
-			curl: buildCurlCommand("GET", "/jobs/{id}/snapshot"),
-		},
-		{
-			method: "GET",
-			path: "/jobs/{id}/analysis?snapshot_revision={n}",
-			description: "Analyze an exact snapshot revision",
-			curl: buildCurlCommand("GET", "/jobs/{id}/analysis?snapshot_revision=3", {
-				quoteUrl: true,
-			}),
-		},
-		{
-			method: "POST",
-			path: "/jobs/{id}/pause",
-			description: "Request an exact runtime pause",
-			curl: buildCurlCommand("POST", "/jobs/{id}/pause"),
-		},
-		{
-			method: "POST",
-			path: "/jobs/{id}/resume",
-			description: "Resume a paused retained job",
-			curl: buildCurlCommand("POST", "/jobs/{id}/resume"),
-		},
-		{
-			method: "POST",
-			path: "/jobs/{id}/cancel",
-			description: "Cancel a live or paused job",
-			curl: buildCurlCommand("POST", "/jobs/{id}/cancel"),
-		},
-		{
-			method: "DELETE",
-			path: "/jobs/{id}",
-			description: "Delete a terminal retained job",
-			curl: buildCurlCommand("DELETE", "/jobs/{id}"),
-		},
-		{
-			method: "GET",
-			path: "/jobs/{id}/events",
-			description: "Stream job lifecycle updates (SSE)",
-			curl: buildCurlCommand("GET", "/jobs/{id}/events", { stream: true }),
-		},
-	];
-
-	apiGuidePanel.appendChild(SF.createApiGuide({ endpoints: endpoints }));
 }
 
 // Update solve action availability

@@ -3,9 +3,11 @@
 import { dom } from "../model/dom.js";
 import { state } from "../model/state.js";
 import {
-	renderApiGuide,
 	updateSolveActionAvailability,
 } from "./render.js";
+
+import { renderApiGuide } from "../views/api-guide.js";
+
 import {
 	cancelSolve,
 	initSolver,
@@ -189,7 +191,7 @@ export function initUI() {
 	initSolver(state.get("backend"), statusBar);
 
 	// Render API guide
-	renderApiGuide();
+	renderApiGuide(state.get("demoCatalog"));
 	updateSolveActionAvailability();
 
 	// Add beforeunload handler

@@ -7,10 +7,8 @@
 
 /**
  * Render the API guide panel
- * @param {Object} SF - SolverForge global
- * @param {Object} demoCatalog - Demo catalog data
- */
-export function renderApiGuide(SF, demoCatalog) {
+  */
+export function renderApiGuide(demoCatalog) {
 	const apiGuidePanel = document.querySelector("#sf-api-guide");
 	if (!apiGuidePanel) return;
 
