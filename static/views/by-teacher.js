@@ -1,19 +1,16 @@
-/* teacher.js — Render lessons by teacher */
+/* by-teacher.js — Render lessons by teacher */
 
-import { dom } from "../model/dom.js";
 import {
 	buildAxisFromTimeslots,
 	ensureCustomTimeline,
 	entityLabel,
 	timeslotToMinutes,
+	toneForKey,
 } from "../utils/timeline-utils.js";
 
 export function renderByTeacher(
 	data,
-	panel,
-	SF,
-	toneForKey,
-	customTimelinesRef = null,
+	panel
 ) {
 	const lessons = data.lessons || [];
 	const teachers = data.teachers || [];
@@ -26,8 +23,8 @@ export function renderByTeacher(
 		return;
 	}
 
-	// Use provided customTimelines
-	const customTimelines = customTimelinesRef || {};
+	// TODO remove customTimelines set
+	const customTimelines = {};
 
 	// Créer une lane par teacher existant, même sans lessons
 	const byTeacher = {};

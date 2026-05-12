@@ -3,26 +3,11 @@
 import { dom } from "../model/dom.js";
 import { state } from "../model/state.js";
 import {
-	DEFAULT_VIEWPORT_SLOTS,
-	SLOT_MINUTES,
-	TIMELINE_TONES,
-} from "../utils/constants.js";
-import {
 	renderByGroup,
 	renderByRoom,
 	renderByTeacher,
 } from "../views/index.js";
 import { canSolve, clonePlan } from "./data.js";
-
-// toneForKey function (needed by views)
-const toneForKey = (key) => {
-	const text = String(key || "");
-	let hash = 0;
-	for (let index = 0; index < text.length; index += 1) {
-		hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
-	}
-	return TIMELINE_TONES[hash % TIMELINE_TONES.length];
-};
 
 // Render all views with current data
 export function renderAll(data) {
@@ -38,24 +23,14 @@ export function renderAll(data) {
 	const byTeacherPanel = dom.byTeacherPanel;
 
 	// Custom timelines
-	const customTimelines = {};
-
 	renderByGroup(
 		data,
-		byGroupPanel,
-		SF,
-		toneForKey,
-		entityLabel,
-		customTimelines,
+		byGroupPanel
 	);
-	renderByRoom(data, byRoomPanel, SF, toneForKey, entityLabel, customTimelines);
+	renderByRoom(data, byRoomPanel);
 	renderByTeacher(
 		data,
-		byTeacherPanel,
-		SF,
-		toneForKey,
-		entityLabel,
-		customTimelines,
+		byTeacherPanel
 	);
 }
 
@@ -158,18 +133,6 @@ export function findHeaderButton(label, header) {
 		}
 	}
 	return null;
-}
-
-// Entity label
-export function entityLabel(entity, fallback) {
-	if (!entity) return String(fallback);
-	return entity.name || entity.id || fallback;
-}
-
-// Fact label
-export function factLabel(fact, fallback) {
-	if (!fact) return String(fallback);
-	return fact.name || fact.id || fallback;
 }
 
 // Title formatting

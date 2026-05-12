@@ -1,6 +1,6 @@
 /* timeline-utils.js — Utility functions for timeline rendering */
 
-import { DAY_MAP, SLOT_MINUTES, WEEKDAYS } from "./constants.js";
+import { DAY_MAP, SLOT_MINUTES, WEEKDAYS, TIMELINE_TONES } from "./constants.js";
 
 // Parse une heure au format "HH:MM:SS" ou "HH:MM" en minutes depuis minuit
 export function parseTimeToMinutes(timeStr) {
@@ -131,6 +131,16 @@ export function buildAxisFromTimeslots(timeslots) {
 	};
 }
 
+// toneForKey function (needed by views)
+export const toneForKey = (key) => {
+	const text = String(key || "");
+	let hash = 0;
+	for (let index = 0; index < text.length; index += 1) {
+		hash = (hash * 31 + text.charCodeAt(index)) >>> 0;
+	}
+	return TIMELINE_TONES[hash % TIMELINE_TONES.length];
+};
+
 // Ensure custom timeline helper
 export function ensureCustomTimeline(key, customTimelines, SF, timelineConfig) {
 	let timeline = customTimelines[key];
@@ -147,11 +157,6 @@ export function ensureCustomTimeline(key, customTimelines, SF, timelineConfig) {
 export function entityLabel(entity, fallback) {
 	if (!entity) return String(fallback);
 	return entity.name || entity.id || fallback;
-}
-
-export function factLabel(fact, fallback) {
-	if (!fact) return String(fallback);
-	return fact.name || fact.id || fallback;
 }
 
 export function title(text) {

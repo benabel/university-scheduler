@@ -8,12 +8,6 @@ import {
 import { state } from "./model/state.js";
 import { initUI } from "./views/init-ui.js";
 
-// Global entityLabel function (needed by views)
-window.entityLabel = (entity, fallback) => {
-	if (!entity) return String(fallback);
-	return entity.name || entity.id || fallback;
-};
-
 // Initialize the application
 async function initApp() {
 	try {

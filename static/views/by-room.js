@@ -1,19 +1,16 @@
-/* room.js — Render lessons by room */
+/* by-room.js — Render lessons by room */
 
-import { dom } from "../model/dom.js";
 import {
 	buildAxisFromTimeslots,
 	ensureCustomTimeline,
 	entityLabel,
 	timeslotToMinutes,
+	toneForKey
 } from "../utils/timeline-utils.js";
 
 export function renderByRoom(
 	data,
-	panel,
-	SF,
-	toneForKey,
-	customTimelinesRef = null,
+	panel
 ) {
 	const lessons = data.lessons || [];
 	const rooms = data.rooms || [];
@@ -25,8 +22,8 @@ export function renderByRoom(
 		return;
 	}
 
-	// Use provided customTimelines
-	const customTimelines = customTimelinesRef || {};
+	// TODO remove customTimelines set
+	const customTimelines = {};
 
 	// Créer une lane par room existant, même sans lessons
 	const byRoom = {};

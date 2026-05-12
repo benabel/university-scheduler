@@ -1,19 +1,16 @@
-/* group.js — Render lessons by group */
+/* by-group.js — Render lessons by group */
 
-import { dom } from "../model/dom.js";
 import {
 	buildAxisFromTimeslots,
 	ensureCustomTimeline,
 	entityLabel,
 	timeslotToMinutes,
+	toneForKey
 } from "../utils/timeline-utils.js";
 
 export function renderByGroup(
 	data,
-	panel,
-	SF,
-	toneForKey,
-	customTimelinesRef = null,
+	panel
 ) {
 	const lessons = data.lessons || [];
 	const groups = data.groups || [];
@@ -25,8 +22,8 @@ export function renderByGroup(
 		return;
 	}
 
-	// Use provided customTimelines
-	const customTimelines = customTimelinesRef || {};
+	// TODO remove customTimelines set
+	const customTimelines = {};
 
 	// Créer une lane par groupe existant, même sans lessons
 	const byGroup = {};
